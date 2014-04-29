@@ -140,10 +140,10 @@ Crt_SmryDF <- function(data, val = "value"){
 ####################
 PltMean <- function(data){
   unt <- substitute((mg~DS_kg^-1))
-  ylabs <- c(expression(atop("Nitrification rates", paste(deparse(unt)))),
+  ylabs <- c(bquote(atop("Nitrification rates", paste(.(unt)))),
              expression(atop("N mineralisation rates", paste((mg~DS_kg^-1)))),
-             expression(atop("P mineralisation rates", unt)))
-  
+             expression(atop("P mineralisation rates", paste(a), list(a = unt))))
+  ylabs[1]
   ylab <- ifelse(length(unique(data$variable)) > 1, expression((mg~dry_soil_kg^-1~day^-1)),
                  ifelse(unique(data$variable) == "no", ylabs[1], 
                         ifelse(unique(data$variable) == "nh", ylabs[2],
