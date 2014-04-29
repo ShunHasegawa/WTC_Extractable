@@ -139,15 +139,26 @@ Crt_SmryDF <- function(data, val = "value"){
 # plot mean and se #
 ####################
 PltMean <- function(data){
-  unt <- substitute((mg~DS_kg^-1))
-  ylabs <- c(bquote(atop("Nitrification rates", paste(.(unt)))),
-             expression(atop("N mineralisation rates", paste((mg~DS_kg^-1)))),
-             expression(atop("P mineralisation rates", paste(a), list(a = unt))))
-  ylabs[1]
-  ylab <- ifelse(length(unique(data$variable)) > 1, expression((mg~dry_soil_kg^-1~day^-1)),
-                 ifelse(unique(data$variable) == "no", ylabs[1], 
-                        ifelse(unique(data$variable) == "nh", ylabs[2],
-                               ylabs[3])))
+  vars <- c(substitute(nutrients),
+            substitute(NO[3]^"-"-N), 
+           substitute(NH[4]^"+"-N),
+           substitute(PO[4]^"3-"-P))
+    # subsitute returens argument as it is without calculation (similar to expression())
+  
+  yvars <- lapply(vars, function(x) bquote(Soil-extractable~.(x)))
+    # bquote allows one to call an object and return expression
+  
+  ylabs <- lapply(yvars, function(x) {
+    c(expression(), 
+      bquote(atop(paste(.(x)), paste((mg~DS_kg^-1)))))         
+  })
+  
+  # atop: put the 1st argument on top of the 2nd
+  
+  ylab <- ifelse(length(unique(data$variable)) > 1, ylabs[[1]],
+                 ifelse(unique(data$variable) == "no", ylabs[[2]], 
+                        ifelse(unique(data$variable) == "nh", ylabs[[3]],
+                               ylabs[[4]])))
   
   colfactor <- ifelse(any(names(data) == "chamber"), "chamber", "temp")
   

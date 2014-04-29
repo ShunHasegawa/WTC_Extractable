@@ -31,3 +31,8 @@ save(extr, file = "Output//Data/WTC_ExtractableNutrient.RData")
 # Summary table #
 #################
 source("R/SummaryTableExcel.R")
+
+########
+# Figs #
+########
+source("R/Figs.R")

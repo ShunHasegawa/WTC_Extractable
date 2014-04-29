@@ -12,10 +12,30 @@ TrtMean <- TrtMean <- ddply(ChMean, .(time, date, temp, variable), function(x) C
 #################################
 # plot each nutrient separately #
 #################################
+vars <- c("Nitrate", "Ammonium", "Phosphate")
+
 ChFg <- dlply(ChMean, .(variable), PltMean)
-fls <- paste("Output/Figs/WTC_Mineralisation_Chamber_", c("Nitrification", "N_mineralisation", "P_mineralisation"), ".pdf",sep = "")
+fls <- paste("Output/Figs/WTC_Extractable_Chamber_", vars, ".pdf",sep = "")
 l_ply(1:3, function(x) ggsave(filename = fls[x], plot = ChFg[[x]], width = 6, height = 3))
 
 TrtFg <- dlply(TrtMean, .(variable), PltMean)
-fls <- paste("Output/Figs/WTC_Mineralisation_Temp_", c("Nitrification", "N_mineralisation", "P_mineralisation"), ".pdf",sep = "")
+fls <- paste("Output/Figs/WTC_Extractable_Temp_", vars, ".pdf",sep = "")
 l_ply(1:3, function(x) ggsave(filename = fls[x], plot = TrtFg[[x]], width = 6, height = 3))
+
+##################################
+# plot all nutrient in one graph #
+##################################
+# labels for facet_grid
+ylabs <- list(
+  'no' = expression(NO[3]^"-"-N),
+  'nh' = expression(NH[4]^"+"-N),
+  'po' = expression(PO[4]^"3-"-P))
+
+
+ylab_label <- function(variable, value){
+  return(ylabs[value])
+}
+
+pl <- PltMean(TrtMean) +
+  facet_grid(variable~., scales= "free_y", labeller= ylab_label)
+ggsave(filename = "Output//Figs/WTC_ExtractableNutrient_Temp.pdf", plot = pl, width = 6, height = 6)
