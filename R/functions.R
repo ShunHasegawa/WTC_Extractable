@@ -139,13 +139,14 @@ Crt_SmryDF <- function(data, val = "value"){
 # plot mean and se #
 ####################
 PltMean <- function(data){
-  ylabs <- c(expression(atop("Nitrification rates", paste((mg~dry_soil_kg^-1~day^-1)))),
-             expression(atop("N mineralisation rates", paste((mg~dry_soil_kg^-1~day^-1)))),
-             expression(atop("P mineralisation rates", paste((mg~dry_soil_kg^-1~day^-1)))))
+  unt <- substitute((mg~DS_kg^-1))
+  ylabs <- c(expression(atop("Nitrification rates", paste(deparse(unt)))),
+             expression(atop("N mineralisation rates", paste((mg~DS_kg^-1)))),
+             expression(atop("P mineralisation rates", unt)))
   
   ylab <- ifelse(length(unique(data$variable)) > 1, expression((mg~dry_soil_kg^-1~day^-1)),
-                 ifelse(unique(data$variable) == "nitrification", ylabs[1], 
-                        ifelse(unique(data$variable) == "n.min", ylabs[2],
+                 ifelse(unique(data$variable) == "no", ylabs[1], 
+                        ifelse(unique(data$variable) == "nh", ylabs[2],
                                ylabs[3])))
   
   colfactor <- ifelse(any(names(data) == "chamber"), "chamber", "temp")
