@@ -27,3 +27,7 @@ extr$date <- dmy(extr$date)
 extr$id <- extr$chamber:extr$side
 save(extr, file = "Output//Data/WTC_ExtractableNutrient.RData")
 
+#################
+# Summary table #
+#################
+source("R/SummaryTableExcel.R")

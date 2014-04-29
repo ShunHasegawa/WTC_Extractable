@@ -59,8 +59,6 @@ Crrtct.ccv.df <- function(filename, ccval = 7.5){
 ######################################################
 # process and combine aq 2 data, then create a table #
 ######################################################
-data  <- read.csv("Data/AQ2/ReadyToProcess/Corrected_WTC_Mineralisation_07JAN2014_NO.csv")
-
 prcsAQ2 <- function(data){
   # remove ccv, ccb, standard
   res <- data[-grep("^C|^STANDARD", as.character(data$Sample.ID)),]
