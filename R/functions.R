@@ -196,7 +196,7 @@ atcr.cmpr <- function(model, rndmFac){
     model2 <- update(model,corr=corCompSymm(form=~1|chamber/side)) 
   } else {
     if(rndmFac == "chamber"){
-      model2 <- update(model,corr=corCompSymm(form=~1|Chamber))
+      model2 <- update(model,corr=corCompSymm(form=~1|chamber))
     } else {
       model2 <- update(model,corr=corCompSymm(form=~1|id))
     }
