@@ -5,7 +5,7 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Soil-extractable nitrate}
+\subsection{Nitrate}
 
 %%% Temp %%%
 \subsubsection{Temp trt}
@@ -18,6 +18,10 @@
 TrtFg[[1]]
 @
 
+\caption{Soil-extractable nitrate at temperature treatments}
+\end{center}
+\end{figure}
+
 <<TableTempNitrate, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[1]],
              caption = "Temp trt mean of soil-extractable nitrate", 
@@ -27,10 +31,6 @@ print(xtable(TrtSmmryTbl[[1]],
       include.rownames = FALSE,
       table.placement = "H")
 @
-
-\caption{Soil-extractable nitrate at temperature treatments}
-\end{center}
-\end{figure}
 
 %% Stats %%
 \paragraph{Stats}
