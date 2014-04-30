@@ -73,6 +73,7 @@ cntrst<- contrast(Fml,
                   b=list(time=levels(extr$time),temp = "elev"))
 
 WTC_ExtractableP_cntstDF <- cntrstTbl(cntrstRes = cntrst, data = extr)
+WTC_ExtractableP_cntstDF
 
 # model diagnosis
 plot(Fml)
@@ -83,8 +84,11 @@ qqline(residuals.lm(Fml))
 
 
 ### remove outlier ###
+
+# before
 bxplts(value = "po", data = extr)
 
+# remove outlier
 P_RmOl <- subset(extr, po > min(po))
 
 bxplts(value = "po", data = P_RmOl)
