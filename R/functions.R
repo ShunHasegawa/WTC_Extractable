@@ -172,7 +172,7 @@ PltMean <- function(data){
   if(colfactor == "temp") p3  <- p2 +  
     scale_color_manual(values = c("blue", "red"), "Temp trt", labels = c("Ambient", "eTemp")) else
     p3 <- p2 + 
-    scale_color_manual(values = palette(), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
+    scale_color_manual(values = palette(), "Chamber", labels = paste("Ch", c(1:12), sep = "_")) +
     scale_linetype_manual(values = rep(c("solid", "dashed"), 6), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
     guides(color = guide_legend(keyheight = 0.7))
   
