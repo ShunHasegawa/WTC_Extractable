@@ -1,0 +1,117 @@
+\Sexpr{set_parent('WTC_ExtractableNutrient_report.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Soil-extractable nitrate}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_extractableNitrate}
+
+\begin{center}
+
+<<FigTempNitrate, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[1]]
+@
+
+<<TableTempNitrate, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[[1]],
+             caption = "Temp trt mean of soil-extractable nitrate", 
+             label = "table:temp_nitrate", 
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\caption{Soil-extractable nitrate at temperature treatments}
+\end{center}
+\end{figure}
+
+%% Stats %%
+\paragraph{Stats}
+\noindent
+
+<<StatTempNitrate, echo=TRUE, results='markup'>>=
+bxplts(value = "no", ofst = 0.1, data = extr)
+ # log seemes better
+
+# different random factor structure
+m1 <- lme(log(no + .1) ~ temp * time, random = ~1|chamber/side, data = extr)
+m2 <- lme(log(no + .1) ~ temp * time, random = ~1|chamber, data = extr)
+m3 <- lme(log(no + .1) ~ temp * time, random = ~1|id, data = extr)
+anova(m1, m2, m3)
+  # m2 is slightly better
+
+# autocorrelation
+atcr.cmpr(m2, rndmFac= "chamber")
+ # no need for auto correlation
+
+Anova(m2)
+
+# model simplification
+MdlSmpl(m2)
+  # interaction of temp x time is removed; temp is maginal but may be removable
+
+# remove temp
+msmpl <- MdlSmpl(m2)$model.ml # extract the simpifed model with the method "ML"
+msmpl2 <- update(msmpl, ~. - temp)
+anova(msmpl, msmpl2)
+  # temp is removed, so now check if we can simplify the model even more
+  MdlSmpl(msmpl2)
+    # unable to remove any more
+
+Fml <- MdlSmpl(msmpl2)$model.reml
+
+# The final model is:
+lme(log(no + .1) ~ time, random = ~1|chamber, data = extr)
+
+Anova(Fml)
+
+summary(Fml)
+
+# model diagnosis
+plot(Fml)
+qqnorm(Fml, ~ resid(.)|chamber)
+qqnorm(residuals.lm(Fml))
+qqline(residuals.lm(Fml))
+@
+
+%%% chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:chamber_nitrate}
+\begin{center}
+
+<<FigChNitrate, echo=FALSE, fig.height=3, fig.width=6>>=
+ChFg[[1]]
+@
+\caption{Soil-extractable nitrate in chambers}
+\end{center}
+\end{figure}
+
+<<TableChNitrate, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[[1]][, 1:13],
+             caption = "Chamber means for soil-extractable nitrate",
+             label = "table:chamber_nitrate",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[[1]][,c(1, 14:25)],
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[[1]][,c(1, 26:37)],
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@

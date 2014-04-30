@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+\usepackage{pdfpages}
+\usepackage{float}
+
+\title{WTC Soil-extractable nutrient results}
+\author{Shun Hasegawa}
+\date{\today}
+
+\begin{document}
+
+<<setup, include=FALSE>>=
+opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+opts_knit$set(root.dir=normalizePath('../'))
+@
+
+<<readFiles, include=FALSE>>=
+library(car)
+library(gmodels)
+library(lme4)
+library(lubridate)
+library(MASS)
+library(nlme)
+library(packrat)
+library(plyr)
+library(reshape)
+library(xlsx)
+library(contrast)
+library(effects)
+library(ggplot2)
+library(xtable)
+
+source("R//functions.R")
+
+load("Output//Data//WTC_ExtractableNutrient.RData")
+source("R/SummaryTableExcel.R")
+source("R/Figs.R")
+@
+
+\maketitle
+\clearpage
+\tableofcontents
+\clearpage
+
+%%%
+%%%
+%%%
+
+\section{Mineralisation}
+
+%%%%%%%%%%%
+% Nitrate %
+%%%%%%%%%%%
+\Sexpr{knit_child('ExtractableNitrate.Rnw')}
+
+%%%%%%%%%%%%
+% Ammonium %
+%%%%%%%%%%%%
+\clearpage
+\Sexpr{knit_child('')}
+
+%%%%%%%%%%%%%
+% Phosphate %
+%%%%%%%%%%%%%
+\clearpage
+\Sexpr{knit_child('')}
+
+%%%%%%%%%%%%%%%%
+% List of figs %
+%%%%%%%%%%%%%%%%
+\clearpage
+\listoffigures
+
+\end{document}
