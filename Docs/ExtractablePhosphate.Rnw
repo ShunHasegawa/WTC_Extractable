@@ -1,0 +1,75 @@
+\Sexpr{set_parent('WTC_ExtractableNutrient_report.Rnw')}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% source files & libraries & setup options                                  %%
+%% need to be loaded here if one wants to compile this child document to PDF %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Soil-extractable phosphate}
+
+%%% Temp %%%
+\subsubsection{Temp trt}
+
+\begin{figure}[!h]\label{figure:temp_extractablePhosphate}
+
+\begin{center}
+
+<<FigTempphosphate, echo=FALSE, fig.height=3, fig.width=6>>=
+TrtFg[[3]]
+@
+
+<<TableTempphosphate, echo=FALSE, results='asis'>>=
+print(xtable(TrtSmmryTbl[[3]],
+             caption = "Temp trt mean of soil-extractable phosphate", 
+             label = "table:temp_phosphate", 
+             align = rep("l", 8)),
+      caption.placement = "top", 
+      include.rownames = FALSE,
+      table.placement = "H")
+@
+
+\caption{Soil-extractable phosphate at temperature treatments}
+\end{center}
+\end{figure}
+
+%% Stats %%
+\paragraph{Stats}
+\noindent
+
+<<StatTempPhosphate, echo=TRUE, results='markup'>>=
+@
+
+%%% chamber %%%
+\clearpage
+\subsubsection{Chamber}
+
+\begin{figure}[!h]\label{figure:chamber_phosphate}
+\begin{center}
+
+<<FigChPhosphate, echo=FALSE, fig.height=3, fig.width=6>>=
+ChFg[[3]]
+@
+\caption{Soil-extractable phosphate in chambers}
+\end{center}
+\end{figure}
+
+<<TableChN_mineralisation, echo=FALSE, results='asis'>>=
+print(xtable(ChSmmryTbl[[3]][, 1:13],
+             caption = "Chamber means for soil-extractable phosphate",
+             label = "table:chamber_phosphate",
+             align = rep("l", 14)),
+      caption.placement = "top",
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[[3]][,c(1, 14:25)],
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+print(xtable(ChSmmryTbl[[3]][,c(1, 26:37)],
+             align = rep("l", 14)),
+      include.rownames= FALSE,
+      table.placement = "H",
+      size = "small")
+@

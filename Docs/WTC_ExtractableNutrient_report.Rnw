@@ -47,7 +47,7 @@ source("R/Figs.R")
 %%%
 %%%
 
-\section{Mineralisation}
+\section{Soil-extractable nutrients}
 
 %%%%%%%%%%%
 % Nitrate %
@@ -58,13 +58,13 @@ source("R/Figs.R")
 % Ammonium %
 %%%%%%%%%%%%
 \clearpage
-\Sexpr{knit_child('')}
+\Sexpr{knit_child('ExtractableAmmonium.Rnw')}
 
 %%%%%%%%%%%%%
 % Phosphate %
 %%%%%%%%%%%%%
 \clearpage
-\Sexpr{knit_child('')}
+\Sexpr{knit_child('ExtractablePhosphate.Rnw')}
 
 %%%%%%%%%%%%%%%%
 % List of figs %
