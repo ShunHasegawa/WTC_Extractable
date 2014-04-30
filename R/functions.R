@@ -169,10 +169,20 @@ PltMean <- function(data){
     labs(x = "Time", y = ylab)
   
   # change colors, linetype and associated legend according plotting groups (chamber or treatment)
-  if(colfactor == "temp") p2 +  scale_color_manual(values = c("blue", "red"), "Temp trt", labels = c("Ambient", "eTemp")) else
-    p2 + scale_color_manual(values = palette(), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
+  if(colfactor == "temp") p3  <- p2 +  
+    scale_color_manual(values = c("blue", "red"), "Temp trt", labels = c("Ambient", "eTemp")) else
+    p3 <- p2 + 
+    scale_color_manual(values = palette(), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
     scale_linetype_manual(values = rep(c("solid", "dashed"), 6), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
     guides(color = guide_legend(keyheight = 0.7))
+  
+  # add asterisk on P graph
+  newDF <- subset(data, time %in% c(2, 6))
+  ant_pos <- ddply(newDF, .(date), summarise, ypos = max(Mean + SE))
+  
+  if(colfactor == "chamber" | unique(data$variable) != "po") p3 else
+    p3 + 
+    annotate("text", x = ant_pos$date, y = ant_pos$ypos, label="*", vjust = 0) 
 }
 
 #######################
