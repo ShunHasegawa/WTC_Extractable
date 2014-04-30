@@ -168,7 +168,7 @@ PltMean <- function(data){
     geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor), width = 5) + 
     labs(x = "Time", y = ylab)
   
-  # change colors, linetype and associated legend according plotting groups (chamber or treatment)
+  # change colors, linetype and associated legend according to plotting groups (chamber or treatment)
   if(colfactor == "temp") p3  <- p2 +  
     scale_color_manual(values = c("blue", "red"), "Temp trt", labels = c("Ambient", "eTemp")) else
     p3 <- p2 + 
@@ -176,13 +176,17 @@ PltMean <- function(data){
     scale_linetype_manual(values = rep(c("solid", "dashed"), 6), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
     guides(color = guide_legend(keyheight = 0.7))
   
-  # add asterisk on P graph
-  newDF <- subset(data, time %in% c(2, 6))
-  ant_pos <- ddply(newDF, .(date), summarise, ypos = max(Mean + SE))
-  
-  if(colfactor == "chamber" | unique(data$variable) != "po") p3 else
-    p3 + 
-    annotate("text", x = ant_pos$date, y = ant_pos$ypos, label="*", vjust = 0) 
+  # add asterisk on P graphs at temperature treatments
+  if(colfactor == "chamber" | !any(unique(data$variable) == "po")) p3 else{
+    newDF <- subset(data, time %in% c(2, 6)) # the times where "*" is placed
+    ant_pos <- ddply(newDF, .(date, variable), summarise, Mean = max(Mean + SE)) #y position of "*"
+    ant_pos <- subset(ant_pos, variable == "po") # only applied to PO data
+    ant_pos$lab <- "*"
+    ant_pos$temp <- factor("amb", levels=c("amb", "elve")) 
+    # the original data frame uses "temp", so it needs to have "temp" as well in ggplot2
+    # but it doesn't really do anything    
+    p3 +  geom_text(data = ant_pos, aes(x =date, y = Mean, label= lab), col = "black", vjust = 0)
+  }
 }
 
 #######################

@@ -36,6 +36,7 @@ ylab_label <- function(variable, value){
   return(ylabs[value])
 }
 
+
 pl <- PltMean(TrtMean) +
   facet_grid(variable~., scales= "free_y", labeller= ylab_label)
 ggsave(filename = "Output//Figs/WTC_ExtractableNutrient_Temp.pdf", plot = pl, width = 6, height = 6)
