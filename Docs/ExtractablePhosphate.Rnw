@@ -42,7 +42,7 @@
 
 \begin{center}
 
-<<FigTempphosphate, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Phosphate_Temp, echo=FALSE, fig.height=3, fig.width=6>>=
 TrtFg[[3]]
 @
 
@@ -51,7 +51,7 @@ TrtFg[[3]]
 \end{figure}
 
 
-<<TableTempphosphate, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Phosphate_Temp, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[3]],
              caption = "Temp trt mean of soil-extractable phosphate", 
              label = "table:temp_phosphate", 
@@ -93,14 +93,14 @@ read_chunk("R/Stats_PO.R")
 \begin{figure}[!h]\label{figure:chamber_phosphate}
 \begin{center}
 
-<<FigChPhosphate, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Phosphate_Chamber, echo=FALSE, fig.height=3, fig.width=6>>=
 ChFg[[3]]
 @
 \caption{Soil-extractable phosphate in chambers}
 \end{center}
 \end{figure}
 
-<<TableChN_mineralisation, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Phosphate_Chamber, echo=FALSE, results='asis'>>=
 print(xtable(ChSmmryTbl[[3]][, 1:13],
              caption = "Chamber means for soil-extractable phosphate",
              label = "table:chamber_phosphate",

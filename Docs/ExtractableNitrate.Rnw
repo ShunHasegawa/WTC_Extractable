@@ -14,7 +14,7 @@
 
 \begin{center}
 
-<<FigTempNitrate, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Nitrate_Temp, echo=FALSE, fig.height=3, fig.width=6>>=
 TrtFg[[1]]
 @
 
@@ -22,7 +22,7 @@ TrtFg[[1]]
 \end{center}
 \end{figure}
 
-<<TableTempNitrate, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Nitrate_Temp, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[1]],
              caption = "Temp trt mean of soil-extractable nitrate", 
              label = "table:temp_nitrate", 
@@ -64,14 +64,14 @@ read_chunk("R/Stats_NO.R")
 \begin{figure}[!h]\label{figure:chamber_nitrate}
 \begin{center}
 
-<<FigChNitrate, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Nitrate_Chamber, echo=FALSE, fig.height=3, fig.width=6>>=
 ChFg[[1]]
 @
 \caption{Soil-extractable nitrate in chambers}
 \end{center}
 \end{figure}
 
-<<TableChNitrate, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Nitrate_Chamber, echo=FALSE, results='asis'>>=
 print(xtable(ChSmmryTbl[[1]][, 1:13],
              caption = "Chamber means for soil-extractable nitrate",
              label = "table:chamber_nitrate",

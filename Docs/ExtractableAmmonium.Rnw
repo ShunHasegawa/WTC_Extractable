@@ -14,14 +14,14 @@
 
 \begin{center}
 
-<<FigTempammonium, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Ammonium_Temp, echo=FALSE, fig.height=3, fig.width=6>>=
 TrtFg[[2]]
 @
 \caption{Soil-extractable ammonium at temperature treatments}
 \end{center}
 \end{figure}
 
-<<TableTempammonium, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Ammonium_Temp, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[2]],
              caption = "Temp trt mean of soil-extractable ammonium", 
              label = "table:temp_ammonium", 
@@ -63,14 +63,14 @@ read_chunk("R/Stats_NH.R")
 \begin{figure}[!h]\label{figure:chamber_ammonium}
 \begin{center}
 
-<<FigChAmmonium, echo=FALSE, fig.height=3, fig.width=6>>=
+<<Fig_WTC_Extr_Ammonium_Chamber, echo=FALSE, fig.height=3, fig.width=6>>=
 ChFg[[3]]
 @
 \caption{Soil-extractable ammonium in chambers}
 \end{center}
 \end{figure}
 
-<<TableChAmmoinum, echo=FALSE, results='asis'>>=
+<<Table_WTC_Extr_Ammonium_Chamber, echo=FALSE, results='asis'>>=
 print(xtable(ChSmmryTbl[[2]][, 1:13],
              caption = "Chamber means for soil-extractable ammonium",
              label = "table:chamber_ammonium",
