@@ -1,34 +1,34 @@
 range(extr$po)
 bxplts(value = "po", data = extr)
-# no transformation seems better
+# use box-cox lambda
 
 # different random factor structure
-m1 <- lme(po ~ temp * time, random = ~1|chamber/side, data = extr)
-m2 <- lme(po ~ temp * time, random = ~1|chamber, data = extr)
-m3 <- lme(po ~ temp * time, random = ~1|id, data = extr)
+m1 <- lme(po^2 ~ temp * time, random = ~1|chamber/side, data = extr)
+m2 <- lme(po^2 ~ temp * time, random = ~1|chamber, data = extr)
+m3 <- lme(po^2 ~ temp * time, random = ~1|id, data = extr)
 anova(m1, m2, m3)
 # m3 seems better
 
 # autocorrelation
-atcr.cmpr(m3, rndmFac= "id")
+atcr.cmpr(m3, rndmFac= "id")$models
 # no need for correlation
 
-Anova(m3)
+# The initial model is:
+Iml <- atcr.cmpr(m3, rndmFac= "id")[[1]]
+Anova(Iml)
 
 # model simplification
-MdlSmpl(m3)
+MdlSmpl(Iml)
 # no factor is removed
 
-Fml <- m3
+Fml <- MdlSmpl(Iml)$model.reml
 
-# the final model is:
-lme(po ~ temp * time, random = ~1|id, data = extr)
+# The final model is:
+Fml$call
 
 Anova(Fml)
 
 summary(Fml)
-
-plot(allEffects(Fml))
 
 # contrast and look at each month
 cntrst<- contrast(Fml,
@@ -45,18 +45,4 @@ qqline(residuals.lm(Fml))
 # not really great..... how about removing outlier
 
 
-### remove outlier ###
-bxplts(value = "po", data = extr)
 
-P_RmOl <- subset(extr, po > min(po))
-
-bxplts(value = "po", data = P_RmOl)
-
-m1 <- lme(po ~ temp * time, random = ~1|chamber/side, data = P_RmOl)
-# model diagnosis
-plot(m1)
-qqnorm(m1, ~ resid(.)|chamber)
-qqnorm(residuals.lm(m1))
-qqline(residuals.lm(m1))
-# slightly improved, but wouldn hardly make a difference in the final resuts
-Anova(m1)
