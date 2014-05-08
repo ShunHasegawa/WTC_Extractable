@@ -1,3 +1,5 @@
+## ----Stat_WTC_Extr_Ammonium
+
 range(extr$nh)
 bxplts(value = "nh", ofst= 0.6, data = extr)
 bxcxplts(value = "nh", data = extr, sval = 0.3, fval = 6)
@@ -40,3 +42,12 @@ qqnorm(Fml, ~ resid(.)|chamber)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
 # not very great, but not too terrible...(?)
+
+## ----Stat_WTC_Extr_Ammonium_Smmry
+# The initial model is:
+Iml$call
+Anova(Iml)
+
+# The final model is:
+Fml$call
+Anova(Fml)

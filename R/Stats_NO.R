@@ -1,6 +1,10 @@
+## ----Stat_WTC_Extr_Nitrate
+
 range(extr$no)
 
 bxplts(value = "no", ofst = 0.1, data = extr)
+bxcxplts(value = "no", data = extr, sval = 0.001, fval = .8)
+
 # log seemes better
 
 # different random factor structure
@@ -11,27 +15,21 @@ anova(m1, m2, m3)
 # m2 is slightly better
 
 # autocorrelation
-atcr.cmpr(m2, rndmFac= "chamber")
+atcr.cmpr(m2, rndmFac= "chamber")$models
 # no need for auto correlation
 
-Anova(m2)
+# The initial model is:
+Iml <- atcr.cmpr(m2, rndmFac= "chamber")[[1]]
+Anova(Iml)
 
 # model simplification
-MdlSmpl(m2)
+MdlSmpl(Iml)
 # interaction of temp x time is removed; temp is maginal but may be removable
 
-# remove temp
-msmpl <- MdlSmpl(m2)$model.ml # extract the simpifed model with the method "ML"
-msmpl2 <- update(msmpl, ~. - temp)
-anova(msmpl, msmpl2)
-# temp is removed, so now check if we can simplify the model even more
-MdlSmpl(msmpl2)
-# unable to remove any more
-
-Fml <- MdlSmpl(msmpl2)$model.reml
+Fml <- MdlSmpl(Iml)$model.reml
 
 # The final model is:
-lme(log(no + .1) ~ time, random = ~1|chamber, data = extr)
+Fml$call
 
 Anova(Fml)
 
@@ -44,3 +42,12 @@ plot(Fml)
 qqnorm(Fml, ~ resid(.)|chamber)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
+
+## ----Stat_WTC_Extr_Nitrate_Smmry
+# The initial model is:
+Iml$call
+Anova(Iml)
+
+# The final model is:
+Fml$call
+Anova(Fml)

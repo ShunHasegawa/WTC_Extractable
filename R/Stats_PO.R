@@ -1,3 +1,5 @@
+## ----Stat_WTC_Extr_Phosphate
+
 range(extr$po)
 bxplts(value = "po", data = extr)
 # use box-cox lambda
@@ -44,5 +46,13 @@ qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
 # not really great..... how about removing outlier
 
+## ----Stat_WTC_Extr_Phosphate_Smmry
+# The initial model is:
+Iml$call
+Anova(Iml)
 
+# The final model is:
+Fml$call
+Anova(Fml)
 
+WTC_ExtractableP_cntstDF
