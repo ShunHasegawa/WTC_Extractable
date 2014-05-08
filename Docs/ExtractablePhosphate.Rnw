@@ -5,6 +5,34 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% <<setup, include=FALSE>>=
+% opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+% opts_knit$set(root.dir=normalizePath('../'))
+% @
+% 
+% <<readFiles, include=FALSE>>=
+% library(car)
+% library(gmodels)
+% library(lme4)
+% library(lubridate)
+% library(MASS)
+% library(nlme)
+% library(packrat)
+% library(plyr)
+% library(reshape)
+% library(xlsx)
+% library(contrast)
+% library(effects)
+% library(ggplot2)
+% library(xtable)
+% 
+% source("R//functions.R")
+% 
+% load("Output//Data//WTC_ExtractableNutrient.RData")
+% source("R/SummaryTableExcel.R")
+% source("R/Figs.R")
+% @
+
 \subsection{Phosphate}
 
 %%% Temp %%%
@@ -33,76 +61,30 @@ print(xtable(TrtSmmryTbl[[3]],
       table.placement = "H")
 @
 
-%% Stats %%
+%%%%%%%%%%%%%
+%%% Stats %%%
+%%%%%%%%%%%%%
+\clearpage
 \paragraph{Stats}
 \noindent
 
-<<StatTempPhosphate, echo=TRUE, results='markup'>>=
-bxplts(value = "po", data = extr)
-  # no transformation seems better
-
-# different random factor structure
-m1 <- lme(po ~ temp * time, random = ~1|chamber/side, data = extr)
-m2 <- lme(po ~ temp * time, random = ~1|chamber, data = extr)
-m3 <- lme(po ~ temp * time, random = ~1|id, data = extr)
-anova(m1, m2, m3)
-  # m3 seems better
-
-# autocorrelation
-atcr.cmpr(m3, rndmFac= "id")
-  # no need for correlation
-
-Anova(m3)
-
-# model simplification
-MdlSmpl(m3)
-  # no factor is removed
-
-Fml <- m3
-
-# the final model is:
-lme(po ~ temp * time, random = ~1|id, data = extr)
-
-Anova(Fml)
-
-summary(Fml)
-
-# contrast and look at each month
-cntrst<- contrast(Fml,
-                  a=list(time=levels(extr$time), temp = "amb"),
-                  b=list(time=levels(extr$time),temp = "elev"))
-
-WTC_ExtractableP_cntstDF <- cntrstTbl(cntrstRes = cntrst, data = extr)
-WTC_ExtractableP_cntstDF
-
-# model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|chamber)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
-  # not really great..... how about removing outlier
-
-
-### remove outlier ###
-
-# before
-bxplts(value = "po", data = extr)
-
-# remove outlier
-P_RmOl <- subset(extr, po > min(po))
-
-bxplts(value = "po", data = P_RmOl)
-
-m1 <- lme(po ~ temp * time, random = ~1|chamber/side, data = P_RmOl)
-# model diagnosis
-plot(m1)
-qqnorm(m1, ~ resid(.)|chamber)
-qqnorm(residuals.lm(m1))
-qqline(residuals.lm(m1))
-  # slightly improved, but wouldn hardly make a difference in the final resuts
-Anova(m1)
-
+<<<ReadScript_WTC_Extr_Phosphate, echo=FALSE, include=FALSE>>=
+source("R/Stats_PO.R")
+read_chunk("R/Stats_PO.R")
 @
+
+%%%%%%%%%%%%%
+%% Summary %%
+%%%%%%%%%%%%%
+
+<<Stat_WTC_Extr_Phosphate_Smmry, echo=TRUE, results='markup'>>=
+@
+
+% %%%%%%%%%%%%
+% %% Detail %%
+% %%%%%%%%%%%%
+% <<Stat_WTC_Extr_Phosphate, echo=TRUE, results='markup'>>=
+% @
 
 %%% chamber %%%
 \clearpage
