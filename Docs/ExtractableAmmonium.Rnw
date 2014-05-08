@@ -43,18 +43,18 @@ source("R/Stats_NH.R")
 read_chunk("R/Stats_NH.R")
 @
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-<<Stat_WTC_Extr_Ammonium_Smmry, echo=TRUE, results='markup'>>=
-@
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
-% <<Stat_WTC_Extr_Ammonium, echo=TRUE, results='markup'>>=
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
+% 
+% <<Stat_WTC_Extr_Ammonium_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+<<Stat_WTC_Extr_Ammonium, echo=TRUE, results='markup'>>=
+@
 
 %%% chamber %%%
 \clearpage

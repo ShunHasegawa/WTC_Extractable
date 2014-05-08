@@ -4,7 +4,7 @@
 \usepackage{pdfpages}
 \usepackage{float}
 
-\title{WTC Soil-extractable nutrient results-Summary Stats-}
+\title{WTC Soil-extractable nutrient results -Detailed Stats-}
 \author{Shun Hasegawa}
 \date{\today}
 

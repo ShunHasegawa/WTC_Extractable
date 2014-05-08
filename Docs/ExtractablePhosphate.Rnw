@@ -73,18 +73,18 @@ source("R/Stats_PO.R")
 read_chunk("R/Stats_PO.R")
 @
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-<<Stat_WTC_Extr_Phosphate_Smmry, echo=TRUE, results='markup'>>=
-@
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
-% <<Stat_WTC_Extr_Phosphate, echo=TRUE, results='markup'>>=
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
+% 
+% <<Stat_WTC_Extr_Phosphate_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+<<Stat_WTC_Extr_Phosphate, echo=TRUE, results='markup'>>=
+@
 
 %%% chamber %%%
 \clearpage

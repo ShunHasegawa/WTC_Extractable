@@ -44,18 +44,18 @@ source("R/Stats_NO.R")
 read_chunk("R/Stats_NO.R")
 @
 
-%%%%%%%%%%%%%
-%% Summary %%
-%%%%%%%%%%%%%
-
-<<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup'>>=
-@
-
-% %%%%%%%%%%%%
-% %% Detail %%
-% %%%%%%%%%%%%
-% <<Stat_WTC_Extr_Nitrate, echo=TRUE, results='markup'>>=
+% %%%%%%%%%%%%%
+% %% Summary %%
+% %%%%%%%%%%%%%
+% 
+% <<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup'>>=
 % @
+
+%%%%%%%%%%%%
+%% Detail %%
+%%%%%%%%%%%%
+<<Stat_WTC_Extr_Nitrate, echo=TRUE, results='markup'>>=
+@
 
 %%% chamber %%%
 \clearpage
