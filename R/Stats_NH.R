@@ -1,41 +1,45 @@
 range(extr$nh)
 bxplts(value = "nh", ofst= 0.6, data = extr)
-# log seems better
+bxcxplts(value = "nh", data = extr, sval = 0.3, fval = 6)
+# adding constant value of 3 may improve
+
+bxplts(value = "nh", ofst= 3, data = extr)
+# use box-cox lambda
 
 # different random factor structure
-m1 <- lme(log(nh + .6) ~ temp * time, random = ~1|chamber/side, data = extr)
-m2 <- lme(log(nh + .6) ~ temp * time, random = ~1|chamber, data = extr)
-m3 <- lme(log(nh + .6) ~ temp * time, random = ~1|id, data = extr)
+m1 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|chamber/side, data = extr)
+m2 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|chamber, data = extr)
+m3 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|id, data = extr)
 anova(m1, m2, m3)
 # m3 is slightly better
 
 # autocorrelation
-atcr.cmpr(m3, rndmFac= "id")
+atcr.cmpr(m3, rndmFac= "id")$models
 # no need for correlation
 
-Anova(m3)
+# The initial model is:
+Iml <- atcr.cmpr(m3, rndmFac= "id")[[1]]
+
+Anova(Iml)
 
 # model simplification
-MdlSmpl(m3)
+MdlSmpl(Iml)
 # interaction of tmep x time is remove
+Fml <- MdlSmpl(Iml)$model.reml
 
-Fml <- MdlSmpl(m3)$model.reml
-
-# the final model is:
-lme(log(nh + .6) ~ temp + time, random = ~1|id, data = extr)
+# The final model is:
+Fml$call
 
 Anova(Fml)
 
 summary(Fml)
-
-plot(allEffects(Fml))
 
 # model diagnosis
 plot(Fml)
 qqnorm(Fml, ~ resid(.)|chamber)
 qqnorm(residuals.lm(Fml))
 qqline(residuals.lm(Fml))
-# not very great, but not too terrible...(?), then how about power(1/3)?
+# not very great, but not too terrible...(?)
 
 ### power(1/3) transformation ###
 bxplts(value = "nh", ofst= 0.29, data = extr)
