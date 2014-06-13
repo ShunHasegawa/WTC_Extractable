@@ -49,6 +49,19 @@ source("R/Figs.R")
 
 \section{Soil-extractable nutrients}
 
+%%%%%%%%%%%%%%%
+% summary fig %
+%%%%%%%%%%%%%%%
+\subsection{Summary results}
+\begin{center}
+\begin{figure}[!ht]\label{figure:WTC_Extractable_Allres}
+
+\includegraphics[width=\textwidth]{../Output/Figs/WTC_ExtractableNutrient_Temp.pdf}
+\caption{Soil-extractable nutrients}
+
+\end{figure}
+\end{center}
+
 %%%%%%%%%%%
 % Nitrate %
 %%%%%%%%%%%
