@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+library
+*.pdf
+Data/
+Output
+*tex
+*log
+*pdf
+*gz
+*lof
+*toc
