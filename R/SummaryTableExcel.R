@@ -10,9 +10,8 @@ TrtSmmryTbl <- dlply(ChMean, .(variable), function(x) CreateTable(x, fac = "temp
 ## create xcel workbook ##
 wb <- createWorkbook()
 
-# worksheet for rowdata
-
-sheet <- createSheet(wb,sheetName="row_data")
+# worksheet for rawdata
+sheet <- createSheet(wb,sheetName="raw_data")
 addDataFrame(extr, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
 # worksheets for chamber summary
