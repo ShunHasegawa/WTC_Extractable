@@ -11,6 +11,7 @@ TrtSmmryTbl <- dlply(ChMean, .(variable), function(x) CreateTable(x, fac = "temp
 wb <- createWorkbook()
 
 # worksheet for rowdata
+
 sheet <- createSheet(wb,sheetName="row_data")
 addDataFrame(extr, sheet, showNA=TRUE, row.names=FALSE, characterNA="NA")
 
