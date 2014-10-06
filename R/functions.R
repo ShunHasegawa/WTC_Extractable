@@ -162,11 +162,13 @@ PltMean <- function(data){
   
   colfactor <- ifelse(any(names(data) == "chamber"), "chamber", "temp")
   
-  p <- ggplot(data, aes_string(x = "date", y = "Mean", col = colfactor))
-  
-  
-  p2 <- p + geom_line(size = 1) + 
-    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor), width = 5) + 
+  p <- ggplot(data, aes_string(x = "date", y = "Mean", col = colfactor, group = colfactor))
+    
+  p2 <- p + geom_line(size = 1, alpha = .7, position = position_dodge(20)) + 
+    geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor),
+                  width = 5, 
+                  position = position_dodge(20),
+                  alpha = .5) + 
     labs(x = "Time", y = ylab)
   
   # change colors, linetype and associated legend according to plotting groups (chamber or treatment)
@@ -174,7 +176,8 @@ PltMean <- function(data){
     scale_color_manual(values = c("blue", "red"), "Temp trt", labels = c("Ambient", "eTemp")) else
     p3 <- p2 + 
     scale_color_manual(values = palette(), "Chamber", labels = paste("Ch", c(1:12), sep = "_")) +
-    scale_linetype_manual(values = rep(c("solid", "dashed"), 6), "Chamber", labels = paste("Chamber", c(1:12), sep = "_")) +
+    scale_linetype_manual(values = rep(c("solid", "dashed"), 6), "Chamber", 
+                          labels = paste("Chamber", c(1:12), sep = "_")) +
     guides(color = guide_legend(keyheight = 0.7))
   
   # add asterisk on P graphs at temperature treatments
@@ -294,4 +297,20 @@ cntrstTbl <- function(cntrstRes, data){
     df = cntrst$df,
     P.value = cntrst$Pvalue)
   return(Df)
+}
+
+##############################
+# Save ggplot in PDF and PNG #
+##############################
+ggsavePP <- function(filename, plot, width, height){
+  ggsave(filename = paste(filename, ".pdf", sep = ""), 
+         plot = plot, 
+         width = width, 
+         height = height)
+  
+  ggsave(filename = paste(filename, ".png", sep = ""), 
+         plot = plot, 
+         width = width, 
+         height = height, 
+         dpi = 600)
 }
