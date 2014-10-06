@@ -164,6 +164,7 @@ PltMean <- function(data){
   
   p <- ggplot(data, aes_string(x = "date", y = "Mean", col = colfactor))
   
+  
   p2 <- p + geom_line(size = 1) + 
     geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor), width = 5) + 
     labs(x = "Time", y = ylab)
