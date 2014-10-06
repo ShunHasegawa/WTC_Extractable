@@ -9,6 +9,17 @@ theme_set(theme_bw()) # graphic backgroud is white
 ChMean <- ddply(extrMlt, .(time, date, temp, chamber, variable), Crt_SmryDF) 
 TrtMean <- TrtMean <- ddply(ChMean, .(time, date, temp, variable), function(x) Crt_SmryDF(x, val = "Mean"))
 
+ChMean$variable <- factor(ChMean$variable, labels = c("Nitrate", "Ammonium", "phosphate"))
+p <- ggplot(ChMean, aes(x = chamber, y = Mean, fill = chamber))
+p2 <- p + geom_boxplot() + scale_fill_manual(values = palette(), "Chabmer") +
+  facet_grid(variable ~., scale = "free_y") +
+  labs(y = expression(Mean~of~Soil~nutrient~through~the~study(mg~kg^"-1")), x= "Chamber")
+
+ggsavePP(filename = "Output//Figs//WTC_ExtractableNutrient_Chamber_BWplt", 
+         width = 6, height = 6, 
+         plot = p2)
+
+
 #################################
 # plot each nutrient separately #
 #################################
