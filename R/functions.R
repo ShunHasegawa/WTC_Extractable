@@ -139,18 +139,22 @@ Crt_SmryDF <- function(data, val = "value"){
 # plot mean and se #
 ####################
 PltMean <- function(data){
-  vars <- c(substitute(nutrients),
-            substitute(NO[3]^"-"-N), 
-           substitute(NH[4]^"+"-N),
-           substitute(PO[4]^"3-"-P))
+  yvars <- c("Soil nutrients",
+            substitute(KCl*-extractable~NO[3]^"-"), 
+           substitute(KCl*-extractable~NH[4]^"+"),
+           substitute(Bray*-extractable~PO[4]^"3-"))
     # subsitute returens argument as it is without calculation (similar to expression())
   
-  yvars <- lapply(vars, function(x) bquote(Soil-extractable~.(x)))
     # bquote allows one to call an object and return expression
+  
+#   ylabs <- lapply(yvars, function(x) {
+#     c(expression(), 
+#       bquote(atop(paste(.(x)), paste((mg~kg^-1)))))         
+#   })
   
   ylabs <- lapply(yvars, function(x) {
     c(expression(), 
-      bquote(atop(paste(.(x)), paste((mg~DS_kg^-1)))))         
+      bquote(paste(.(x), ~(mg~kg^-1))))         
   })
   
   # atop: put the 1st argument on top of the 2nd
@@ -164,11 +168,11 @@ PltMean <- function(data){
   
   p <- ggplot(data, aes_string(x = "date", y = "Mean", col = colfactor, group = colfactor))
     
-  p2 <- p + geom_line(size = 1, alpha = .7, position = position_dodge(20)) + 
+  p2 <- p + geom_line(size = 1, alpha = .8, position = position_dodge(10)) + 
     geom_errorbar(aes_string(ymin = "Mean - SE", ymax = "Mean + SE", col = colfactor),
                   width = 5, 
-                  position = position_dodge(20),
-                  alpha = .5) + 
+                  position = position_dodge(10),
+                  alpha = .8) + 
     labs(x = "Time", y = ylab)
   
   # change colors, linetype and associated legend according to plotting groups (chamber or treatment)
