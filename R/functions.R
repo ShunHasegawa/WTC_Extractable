@@ -139,30 +139,18 @@ Crt_SmryDF <- function(data, val = "value"){
 # plot mean and se #
 ####################
 PltMean <- function(data){
-  yvars <- c("Soil nutrients",
-            substitute(KCl*-extractable~NO[3]^"-"), 
-           substitute(KCl*-extractable~NH[4]^"+"),
-           substitute(Bray*-extractable~PO[4]^"3-"))
-    # subsitute returens argument as it is without calculation (similar to expression())
   
-    # bquote allows one to call an object and return expression
-  
-#   ylabs <- lapply(yvars, function(x) {
-#     c(expression(), 
-#       bquote(atop(paste(.(x)), paste((mg~kg^-1)))))         
-#   })
-  
-  ylabs <- lapply(yvars, function(x) {
-    c(expression(), 
-      bquote(paste(.(x), ~(mg~kg^-1))))         
-  })
-  
+  ylabs <- c(expression(Soil~extractable~nutrients~(mg~kg^-1)),
+             expression(atop(KCl*-extractable~NO[3]^"-", (mg~kg^-1))),
+             expression(atop(KCl*-extractable~NH[4]^"+", (mg~kg^-1))),
+             expression(atop(KCl*-extractable~PO[4]^"3-", (mg~kg^-1))))
+             
   # atop: put the 1st argument on top of the 2nd
   
-  ylab <- ifelse(length(unique(data$variable)) > 1, ylabs[[1]],
-                 ifelse(unique(data$variable) == "no", ylabs[[2]], 
-                        ifelse(unique(data$variable) == "nh", ylabs[[3]],
-                               ylabs[[4]])))
+  ylab <- ifelse(length(unique(data$variable)) > 1, ylabs[1],
+                 ifelse(unique(data$variable) == "no", ylabs[2], 
+                        ifelse(unique(data$variable) == "nh", ylabs[3],
+                               ylabs[4])))
   
   colfactor <- ifelse(any(names(data) == "chamber"), "chamber", "temp")
   
@@ -173,7 +161,9 @@ PltMean <- function(data){
                   width = 5, 
                   position = position_dodge(10),
                   alpha = .8) + 
-    labs(x = "Time", y = ylab)
+  scale_x_date(breaks= date_breaks("2 month"), labels = date_format("%b-%y")) +
+  theme(axis.text.x  = element_text(angle=45, vjust= 1, hjust = 1)) +
+  labs(x = "Month", y = ylab)
   
   # change colors, linetype and associated legend according to plotting groups (chamber or treatment)
   if(colfactor == "temp") p3  <- p2 +  
