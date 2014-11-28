@@ -22,6 +22,18 @@ TrtFg <- dlply(TrtMean, .(variable), PltMean)
 fls <- paste("Output/Figs/WTC_Extractable_Temp_", vars, sep = "")
 l_ply(1:3, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 6, height = 3))
 
+############################
+# Fig for BES presentaiton #
+############################
+poster_theme <- theme(panel.grid.major = element_blank(),
+                      panel.grid.minor = element_blank(),
+                      legend.position = "non")
+
+TrtFg <- dlply(TrtMean, .(variable), function(x) PltMean(x) + poster_theme)
+fls <- paste("Output/Figs/BES_Presentation/WTC_Extractable_Temp_", vars, sep = "")
+l_ply(1:3, function(x) ggsavePP(filename = fls[x], plot = TrtFg[[x]], width = 5, height = 3))
+
+
 ##################################
 # plot all nutrient in one graph #
 ##################################
