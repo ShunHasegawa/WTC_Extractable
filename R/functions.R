@@ -308,3 +308,16 @@ ggsavePP <- function(filename, plot, width, height){
          height = height, 
          dpi = 600)
 }
+
+###########################
+# step deletion with lmer #
+###########################
+stepLmer <- function(model, red.rndm = FALSE, ddf = "Kenward-Roger", ...){
+  require(lmerTest)
+  update(step(model, reduce.random = red.rndm, ddf = ddf,...)$model, 
+         contrasts = NULL)
+}
+# use "Kenward-Roger" for approximation for denominator degrees of freedom. This
+# is the same as the default DF given by Anova(model, test.statistic = "F). The
+# default of step gives me a warning message for IEM-NO3 for some reasons (not
+# sure why.. so changed it.)
