@@ -52,11 +52,11 @@ WTC_ExtractableP_cntstDF <- cntrstTbl(cntrstRes = cntrst, data = extr)
 
 ## ----Stat_WTC_Extr_Phosphate_Smmry
 # The initial model is:
-Iml$call
+Iml@call
 Anova(Iml)
 
 # The final model is:
-Fml$call
+Fml@call
 Anova(Fml)
 AnvF_P
 
