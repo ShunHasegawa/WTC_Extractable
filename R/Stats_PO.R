@@ -36,6 +36,7 @@ qqline(resid(m1))
 # improved slightly, so use this for the time being
 Fml <- m1
 AnvF_P <- Anova(Fml, test.statistic = "F")
+AnvF_P
 
 ############
 # contrast #
