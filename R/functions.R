@@ -143,7 +143,7 @@ PltMean <- function(data){
   ylabs <- c(expression(Soil~extractable~nutrients~(mg~kg^-1)),
              expression(atop(KCl*-extractable~NO[3]^"-", (mg~kg^-1))),
              expression(atop(KCl*-extractable~NH[4]^"+", (mg~kg^-1))),
-             expression(atop(Bray*-extractable~PO[4]^"3-", (mg~kg^-1))))
+             expression(atop(Extractable~soil*-PO[4]^"3-", (mg~kg^-1))))
              
   # atop: put the 1st argument on top of the 2nd
   
