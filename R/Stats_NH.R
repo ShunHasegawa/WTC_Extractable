@@ -1,53 +1,84 @@
 ## ----Stat_WTC_Extr_Ammonium
 
-range(extr$nh)
-bxplts(value = "nh", ofst= 0.6, data = extr)
-bxcxplts(value = "nh", data = extr, sval = 0.3, fval = 6)
-# adding constant value of 3 may improve
+bxplts(value = "nh", data = Extr_DF)
 
-bxplts(value = "nh", ofst= 3, data = extr)
-# use box-cox lambda
+# log
+Iml_nh <- lmer(nh^(1/3) ~ temp * time + (1|chamber), data = Extr_DF)
+Anova(Iml_nh)
 
-# different random factor structure
-m1 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|chamber/side, data = extr)
-m2 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|chamber, data = extr)
-m3 <- lme((nh + 3)^(-1.1515) ~ temp * time, random = ~1|id, data = extr)
-anova(m1, m2, m3)
-# m3 is slightly better
-
-# autocorrelation
-atcr.cmpr(m3, rndmFac= "id")$models
-# no need for correlation
-
-# The initial model is:
-Iml <- atcr.cmpr(m3, rndmFac= "id")[[1]]
-
-Anova(Iml)
-
-# model simplification
-MdlSmpl(Iml)
-# interaction of tmep x time is remove
-Fml <- MdlSmpl(Iml)$model.reml
-
-# The final model is:
-Fml$call
-
-Anova(Fml)
-
-summary(Fml)
+Fml_nh <- stepLmer(Iml_nh)
+AnvF_nh <- Anova(Fml_nh, test.statistic = "F")
+AnvF_nh
 
 # model diagnosis
-plot(Fml)
-qqnorm(Fml, ~ resid(.)|chamber)
-qqnorm(residuals.lm(Fml))
-qqline(residuals.lm(Fml))
-# not very great, but not too terrible...(?)
+plot(Fml_nh)
+qqnorm(resid(Fml_nh))
+qqline(resid(Fml_nh))
+
+# what if I remove the outlier
+ol <- which(qqnorm(resid(Fml_nh))$y == min(qqnorm(resid(Fml_nh))$y))
+m <- update(Iml_nh, subset = -ol)
+plot(m)
+qqnorm(resid(m))
+qqline(resid(m))
+Anova(m, test.statistic = "F")
+m2 <- stepLmer(m)
+Anova(m2, test.statistic = "F")
+# same as the above so just stay with the first one
+
+
+############################
+# ANCOVA fit soil variable #
+############################
+
+# plot soil variables 
+xyplot(nh ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF)
+xyplot(nh ~ moist|chamber, type = c("r", "p"), data = Extr_DF)
+xyplot(nh ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF)
+xyplot(nh ~ moist|time, type = c("r", "p"), data = Extr_DF)
+
+scatterplotMatrix(~ I(nh^(1/3)) + moist + Temp5_Mean, data = Extr_DF, diag = "boxplot", 
+                  groups = Extr_DF$temp, by.group = TRUE)
+scatterplotMatrix(~ log(nh) + log(moist) + Temp5_Mean, data = Extr_DF, diag = "boxplot", 
+                  groups = Extr_DF$temp, by.group = TRUE)
+
+
+Iml_ancv_nh <- lmer(nh^(1/3) ~ temp * log(moist) + (1|time) + (1|chamber), 
+                    data = Extr_DF)
+m2 <- update(Iml_ancv_nh, ~. - (1|time))
+m3 <- update(Iml_ancv_nh, ~. - (1|chamber))
+anova(Iml_ancv_nh, m2, m3)
+
+Anova(Iml_ancv_nh)
+Fml_ancv_nh <- Iml_ancv_nh
+AnvF_ancv_nh <- Anova(Fml_ancv_nh, test.statistic = "F")
+AnvF_ancv_nh
+plot(Fml_ancv_nh)
+qqnorm(resid(Fml_ancv_nh))
+qqline(resid(Fml_ancv_nh))
+
+# visualise
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
 
 ## ----Stat_WTC_Extr_Ammonium_Smmry
 # The initial model is:
-Iml$call
-Anova(Iml)
+Iml_nh@call
+Anova(Iml_nh)
 
 # The final model is:
-Fml$call
-Anova(Fml)
+Fml_nh@call
+Anova(Fml_nh)
+
+# ANCOVA
+Iml_ancv_nh@call
+Anova(Iml_ancv_nh)
+
+Fml_ancv_nh@call
+
+# Chi
+Anova(Fml_ancv_nh)
+
+# F test
+AnvF_ancv_nh
+
+visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
