@@ -108,6 +108,7 @@ CreateTable <- function(dataset, fac){
   colnames(samples)[2:ncol(samples)] <- paste(colnames(samples)[2:ncol(samples)],"N",sep=".")
   mer <- Reduce(function(...) merge(..., by = "date"), list(means, ses, samples)) #merge datasets
   mer <- mer[,c(1, order(names(mer)[-grep("date|N", names(mer))])+1, grep("N", names(mer)))] #re-order columns
+  if(fac == "temp") mer$tempR <- with(mer, elev/amb - 1)
   mer$date <- as.character(mer$date) # date is turned into character for knitr output 
   return(mer)
 }
@@ -232,9 +233,9 @@ atcr.cmpr <- function(model, rndmFac){
 # log OR sqrt OR power(1/3) OR inverse OR box-cox
 bxplts <- function(value, ofst = 0, data, ...){
   data$y <- data[[value]] + ofst #ofst is added to make y >0
-  a <- boxcox(y ~ temp * time, data = data)
+  a <- boxcox(y ~ temp * time, data = data, plotit = FALSE)
   par(mfrow = c(2, 3))
-  boxplot(y ~ temp*time, data, main = "row")
+  boxplot(y ~ temp*time, data, main = "raw")
   boxplot(log(y) ~ temp*time, main = "log", data)
   boxplot(sqrt(y) ~ temp*time, main = "sqrt", data)
   boxplot(y^(1/3) ~ temp*time, main = "power(1/3)", data)
@@ -251,6 +252,7 @@ bxplts <- function(value, ofst = 0, data, ...){
 
 # multiple box-cox power plot for different constant values
 bxcxplts <- function(value, data, sval, fval){
+  par.def <- par()
   data$yval <- data[[value]]
   ranges <- seq(sval, fval, (fval - sval)/9)
   
@@ -259,7 +261,7 @@ bxcxplts <- function(value, data, sval, fval){
   BCmax <- vector()
   for (i in 1:10){
     data$y <- data$yval + ranges[i]
-    a <- boxcox(y ~ temp * time, data = data)
+    a <- boxcox(y ~ temp * time, data = data, plotit = FALSE)
     BCmax[i] <- a$x[a$y == max(a$y)]
   }
   
@@ -275,23 +277,40 @@ bxcxplts <- function(value, data, sval, fval){
                        ", boxcox=", round(BCmax[x], 4)),
           col.main = texcol)
   })
-  par(mfrow = c(1,1))
+  par(par.def)
 }
+
+################################
+# Return star based on P value #
+################################
+FormatPval <- function(Pval) {
+  stars <- ifelse(Pval > .05, "",
+                  ifelse(Pval > .01, "'*'",
+                         ifelse(Pval > .001, "'**'", 
+                                "'***'")))
+  
+  p <- as.character(ifelse(Pval > .1, round(Pval, 3),
+                           ifelse(Pval < .001, "bold('<0.001')", 
+                                  # shown with bold font. Note that inside of
+                                  # bold needs to be in ''
+                                  paste("bold(", round(Pval, 3), ")", sep = "'"))))
+  return(data.frame(stars, p))
+} 
 
 ####################################
 # create table of contrast results #
 ####################################
-cntrstTbl <- function(cntrstRes, data){
-  d <- unique(data$date)
-  ds <- format(d, format = "%b-%Y")
-  
+cntrstTbl <- function(cntrstRes, data, variable, ...){
+  d <- unique(data[, c("date", "time")])
   Df <- data.frame(
-    date = ds,
-    contrast  =  cntrst$Contrast,
-    SE = cntrst$SE,
-    t = cntrst$testStat,
-    df = cntrst$df,
-    P.value = cntrst$Pvalue)
+    d,
+    contrast  =  cntrstRes$Contrast,
+    SE = cntrstRes$SE,
+    t = cntrstRes$testStat,
+    df = cntrstRes$df,
+    P.value = cntrstRes$Pvalue,
+    FormatPval(cntrstRes$Pvalue),
+    variable = variable)
   return(Df)
 }
 
@@ -323,3 +342,149 @@ stepLmer <- function(model, red.rndm = FALSE, ddf = "Kenward-Roger", ...){
 # is the same as the default DF given by Anova(model, test.statistic = "F). The
 # default of step gives me a warning message for IEM-NO3 for some reasons (not
 # sure why.. so changed it.)
+
+##################
+# Geometric mean #
+##################
+gm_mean = function(x, na.rm=TRUE){
+  exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+}
+
+geoCI <- function(x) exp(ci(log(x))[c(2, 3, 4)])
+
+########################################
+# Create summary stat table from anova #
+########################################
+StatTable <- function(x, variable) { # x is anova result
+  df <- data.frame(predictor = c(row.names(x)),
+                   rbind(FormatPval(x$Pr)))
+  
+  # add a row for column name of the table in the fig 
+  df <- rbind(df, data.frame(predictor = "", 
+                             stars = "italic('P')", 
+                             p = "italic('P')"))
+  
+  result <- merge(df, data.frame(predictor = c("temp", "time", "temp:time")), all = TRUE)
+  
+  # replace NA with ns
+  result <- within(result, {
+    p <- ifelse(is.na(p), "ns", as.character(p)) 
+    # ifelse tries to return factor, so use as.character
+    stars <- ifelse(is.na(stars), "ns", as.character(stars))
+  })
+  
+  # relabel for plotting
+  result$predictor <- factor(result$predictor, 
+                             labels = c("", "Temp", "Time", "Temp~x~Time"), 
+                             levels = c("", "temp", "time", "temp:time"))
+  result$variable <- variable
+  result <- result[order(result$predictor), ]
+  return(result)
+}
+
+############################################
+# Create df to add a stat table to figures #
+############################################
+StatPositionDF <- function(StatRes, variable, ytop, ylength, gap = .1){
+  d <- data.frame(variable, ytop, gap = gap * ylength) 
+  # ytop is y coordinate for the top (i.e. temp) of the table for each fig 
+  # (variable), ylength is the difference of max and min value of the plot (i.e.
+  # max(mean+SE) - min(mean-SE)). 0.1 * ylength is used to determine the gap between each row
+  # of the table
+  
+  predictor <- levels(StatRes$predictor)
+  
+  # create df which contains variable, predictor and y coordinates for the other
+  # predictors (i.e. Time, tempxTime) which is ylength*0.1 (= gap) lower than one above
+  d2 <- ddply(d, .(variable),
+              function(x){
+                data.frame(predictor, 
+                           ldply(1:length(predictor), function(z) x$ytop - z * x$gap))
+              })
+  names(d2)[3] <- "yval"
+  
+  # mege every thing
+  d3 <- merge(d2, StatRes, by = c("variable", "predictor"))
+  d3$temp <- "amb" # temp column is required for ggplot
+  return(d3)
+}
+
+
+#######################
+# Fig for publication #
+#######################
+# define graphic background
+science_theme <- theme(panel.border = element_rect(color = "black"),
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank(),
+                       axis.text.x  = element_text(angle=45, vjust= 1, hjust = 1),
+                       axis.ticks.length = unit(-.2, "lines"),
+                       axis.ticks.margin = unit(.5, "lines"),
+                       legend.position = c(.4, .93), 
+                       legend.title = element_blank(),
+                       legend.key.width = unit(2.5, "lines"),
+                       legend.key = element_blank())
+
+# white-black figure
+WBFig <- function(data, ylab, facetLab = ylab_label, figTheme = science_theme, StatRes, StatY){
+  # StatRes is stats tables to put on the figs; StatY is y coordinate for that tables
+  
+  # df for sub labels
+  subLabDF <- with(data, 
+                   data.frame(xv = as.Date("2013-2-2"),
+                              ddply(data, .(variable), summarise, yv = max(Mean + SE)),
+                              labels = paste("(", letters[1:length(levels(variable))], ")",
+                                             sep = ""),
+                              temp = "amb"))
+  # temp is required as group = temp is used in the main plot mapping
+  
+  # df for stat table
+  ## compute ylength for each variable
+  ylengthDF <- ddply(data, 
+                     .(variable), 
+                     function(x) 
+                       data.frame(ylength = max(x$Mean +x$SE, na.rm = TRUE) -
+                                    min(x$Mean - x$SE, na.rm = TRUE)))
+  # ylength is given as the difference between max and min
+  
+  ## create df
+  statDF <- StatPositionDF(StatRes = StatRes, 
+                           variable = levels(ylengthDF$variable), 
+                           ytop = StatY,
+                           ylength = ylengthDF$ylength)
+  
+  # create a plot
+  p <- ggplot(data, aes(x = date, y = Mean, group = temp))
+  
+  p2 <- p + 
+    geom_line(aes(linetype = temp), position = position_dodge(10)) + 
+    geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE), 
+                  width = 0, 
+                  position = position_dodge(10)) + 
+    geom_point(aes(fill = temp), 
+               shape = 21, size = 4,   
+               position = position_dodge(10)) +
+    labs(x = "Month", y = ylab) +
+    scale_x_date(breaks= date_breaks("3 month"),
+                 labels = date_format("%b-%y"),
+                 limits = as.Date(c("2013-2-1", "2014-2-15"))) +
+    scale_fill_manual(values = c("black", "white"), 
+                      labels = c("Ambient", "eTemp")) +
+    scale_linetype_manual(values = c("solid", "dashed"), 
+                          labels = c("Ambient", "eTemp")) +
+    geom_text(aes(x = xv, y = yv, label = labels),
+              fontface = "bold",
+              hjust = 1,
+              data = subLabDF) +
+    facet_grid(variable~., scales= "free_y", labeller= facetLab) +
+    figTheme +
+    geom_text(data = subset(statDF, predictor != ""), 
+              aes(x = as.Date("2013-3-22"), y = yval, label = predictor),
+              size = 3, hjust = 1, parse = TRUE) +
+    # unless remove [" "] with predictor != "", labels will be messed up due to
+    # this empty level
+    geom_text(data = statDF, 
+              aes(x = as.Date("2013-4-11"), y = yval, label = p), 
+              size = 3, parse = TRUE)
+  return(p2)
+}
