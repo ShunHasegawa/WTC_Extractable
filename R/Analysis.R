@@ -17,6 +17,9 @@ source("R//functions.R")
 # save(extr, file = "Output//Data/WTC_ExtractableNutrient.RData")
 load("Output//Data/WTC_ExtractableNutrient.RData")
 
+# rmeove negative nh values
+extr$nh[extr$nh < 0] <- NA
+
 #################
 # Summary table #
 #################
