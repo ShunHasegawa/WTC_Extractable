@@ -3,6 +3,7 @@
 \usepackage{fullpage}
 \usepackage{pdfpages}
 \usepackage{float}
+\usepackage[hidelinks]{hyperref}
 
 \title{WTC Soil-extractable nutrient results-Summary Stats-}
 \author{Shun Hasegawa}
@@ -16,26 +17,8 @@ opts_knit$set(root.dir=normalizePath('../'))
 @
 
 <<readFiles, include=FALSE>>=
-library(car)
-library(gmodels)
-library(lme4)
-library(lubridate)
-library(MASS)
-library(nlme)
-library(packrat)
-library(plyr)
-library(reshape)
-library(xlsx)
-library(contrast)
-library(effects)
-library(ggplot2)
-library(xtable)
-
-source("R//functions.R")
-
-load("Output//Data//WTC_ExtractableNutrient.RData")
-source("R/SummaryTableExcel.R")
-source("R/Figs.R")
+source("R/packages.R")
+load("Output/Data/AllObj.RData")
 @
 
 \maketitle
@@ -47,20 +30,14 @@ source("R/Figs.R")
 %%%
 %%%
 
-\section{Soil-extractable nutrients}
-
 %%%%%%%%%%%%%%%
 % summary fig %
 %%%%%%%%%%%%%%%
-\subsection{Summary results}
-\begin{center}
+\section{Summary results}
 \begin{figure}[!ht]\label{figure:WTC_Extractable_Allres}
-
-\includegraphics[width=\textwidth]{../Output/Figs/WTC_ExtractableNutrient_Temp.pdf}
+\includegraphics[width=\textwidth]{../Output/Figs/Manuscriopt/WTC_Extractable.pdf}
 \caption{Soil-extractable nutrients}
-
 \end{figure}
-\end{center}
 
 %%%%%%%%%%%
 % Nitrate %

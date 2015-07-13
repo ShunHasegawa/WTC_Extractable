@@ -5,28 +5,31 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Nitrate}
+%' <<setup, include=FALSE>>=
+%' opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+%' opts_knit$set(root.dir=normalizePath('../'))
+%' @
+%' 
+%' <<readFiles, include=FALSE>>=
+%' source("R/packages.R")
+%' load("Output/Data/AllObj.RData")
+%' @
+
+\section{Nitrate}
 
 %%% Temp %%%
-\subsubsection{Temp trt}
+\subsection{Temperature treatment}
 
 \begin{figure}[!h]\label{figure:temp_extractableNitrate}
-
-\begin{center}
-
-<<Fig_WTC_Extr_Nitrate_Temp, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[[1]]
-@
-
+\includegraphics{../Output/Figs/WTC_Extractable_Temp_Nitrate.pdf}
 \caption{Soil-extractable nitrate at temperature treatments}
-\end{center}
 \end{figure}
 
 <<Table_WTC_Extr_Nitrate_Temp, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[1]],
-             caption = "Temp trt mean of soil-extractable nitrate", 
+             caption = "Temperature treatment mean of soil-extractable nitrate", 
              label = "table:temp_nitrate", 
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
@@ -36,11 +39,9 @@ print(xtable(TrtSmmryTbl[[1]],
 %%% Stats %%%
 %%%%%%%%%%%%%
 \clearpage
-\paragraph{Stats}
-\noindent
+\subsection{Stats}
 
 <<<ReadScript_WTC_Extr_Nitrate, echo=FALSE, include=FALSE>>=
-source("R/Stats_NO.R")
 read_chunk("R/Stats_NO.R")
 @
 
@@ -48,7 +49,7 @@ read_chunk("R/Stats_NO.R")
 %% Summary %%
 %%%%%%%%%%%%%
 
-<<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup'>>=
+<<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup', fig.show='asis', fig.width = 4, fig.height = 4>>=
 @
 
 % %%%%%%%%%%%%
@@ -59,16 +60,11 @@ read_chunk("R/Stats_NO.R")
 
 %%% chamber %%%
 \clearpage
-\subsubsection{Chamber}
+\subsection{Chamber}
 
 \begin{figure}[!h]\label{figure:chamber_nitrate}
-\begin{center}
-
-<<Fig_WTC_Extr_Nitrate_Chamber, echo=FALSE, fig.height=3, fig.width=6>>=
-ChFg[[1]]
-@
+\includegraphics{../Output/Figs/WTC_Extractable_Chamber_Nitrate.pdf}
 \caption{Soil-extractable nitrate in chambers}
-\end{center}
 \end{figure}
 
 <<Table_WTC_Extr_Nitrate_Chamber, echo=FALSE, results='asis'>>=

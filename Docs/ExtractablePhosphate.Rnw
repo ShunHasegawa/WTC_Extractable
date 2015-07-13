@@ -5,57 +5,32 @@
 %% need to be loaded here if one wants to compile this child document to PDF %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% <<setup, include=FALSE>>=
-% opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
-% opts_knit$set(root.dir=normalizePath('../'))
-% @
-% 
-% <<readFiles, include=FALSE>>=
-% library(car)
-% library(gmodels)
-% library(lme4)
-% library(lubridate)
-% library(MASS)
-% library(nlme)
-% library(packrat)
-% library(plyr)
-% library(reshape)
-% library(xlsx)
-% library(contrast)
-% library(effects)
-% library(ggplot2)
-% library(xtable)
-% 
-% source("R//functions.R")
-% 
-% load("Output//Data//WTC_ExtractableNutrient.RData")
-% source("R/SummaryTableExcel.R")
-% source("R/Figs.R")
-% @
+%' <<setup, include=FALSE>>=
+%' opts_chunk$set(concordance = TRUE, warning = FALSE, tidy = TRUE, tidy.opts = list(width.cutoff = 60))
+%' opts_knit$set(root.dir=normalizePath('../'))
+%' @
+%' 
+%' <<readFiles, include=FALSE>>=
+%' source("R/packages.R")
+%' load("Output/Data/AllObj.RData")
+%' @
 
-\subsection{Phosphate}
+\section{Phosphate}
 
 %%% Temp %%%
-\subsubsection{Temp trt}
+\subsection{Temperature treatment}
 
 \begin{figure}[!h]\label{figure:temp_extractablePhosphate}
-
-\begin{center}
-
-<<Fig_WTC_Extr_Phosphate_Temp, echo=FALSE, fig.height=3, fig.width=6>>=
-TrtFg[[3]]
-@
-
+\includegraphics{../Output/Figs/WTC_Extractable_Temp_Phosphate.pdf}
 \caption{Soil-extractable phosphate at temperature treatments}
-\end{center}
 \end{figure}
 
 
 <<Table_WTC_Extr_Phosphate_Temp, echo=FALSE, results='asis'>>=
 print(xtable(TrtSmmryTbl[[3]],
-             caption = "Temp trt mean of soil-extractable phosphate", 
+             caption = "Temperature treatment mean of soil-extractable phosphate", 
              label = "table:temp_phosphate", 
-             align = rep("l", 8)),
+             align = rep("l", 9)),
       caption.placement = "top", 
       include.rownames = FALSE,
       table.placement = "H")
@@ -65,11 +40,10 @@ print(xtable(TrtSmmryTbl[[3]],
 %%% Stats %%%
 %%%%%%%%%%%%%
 \clearpage
-\paragraph{Stats}
+\subsection{Stats}
 \noindent
 
 <<<ReadScript_WTC_Extr_Phosphate, echo=FALSE, include=FALSE>>=
-source("R/Stats_PO.R")
 read_chunk("R/Stats_PO.R")
 @
 
@@ -77,7 +51,7 @@ read_chunk("R/Stats_PO.R")
 %% Summary %%
 %%%%%%%%%%%%%
 
-<<Stat_WTC_Extr_Phosphate_Smmry, echo=TRUE, results='markup'>>=
+<<Stat_WTC_Extr_Phosphate_Smmry, echo=TRUE, results='markup', fig.show='asis', fig.width = 4, fig.height = 4>>=
 @
 
 % %%%%%%%%%%%%
@@ -88,16 +62,11 @@ read_chunk("R/Stats_PO.R")
 
 %%% chamber %%%
 \clearpage
-\subsubsection{Chamber}
+\subsection{Chamber}
 
 \begin{figure}[!h]\label{figure:chamber_phosphate}
-\begin{center}
-
-<<Fig_WTC_Extr_Phosphate_Chamber, echo=FALSE, fig.height=3, fig.width=6>>=
-ChFg[[3]]
-@
+\includegraphics{../Output/Figs/WTC_Extractable_Chamber_Phosphate.pdf}
 \caption{Soil-extractable phosphate in chambers}
-\end{center}
 \end{figure}
 
 <<Table_WTC_Extr_Phosphate_Chamber, echo=FALSE, results='asis'>>=
