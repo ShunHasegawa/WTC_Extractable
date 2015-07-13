@@ -182,7 +182,7 @@ PltMean <- function(data){
     newDF <- subset(data, time %in% c(2, 6)) # the times where "*" is placed
     ant_pos <- ddply(newDF, .(date, variable), summarise, Mean = max(Mean + SE)) #y position of "*"
     ant_pos <- subset(ant_pos, variable == "po") # only applied to PO data
-    ant_pos$lab <- c("*", "***")
+    ant_pos$lab <- c("*", "*")
     ant_pos$temp <- factor("amb", levels=c("amb", "elve")) 
     # the original data frame uses "temp", so it needs to have "temp" as well in ggplot2
     # but it doesn't really do anything    
@@ -488,3 +488,8 @@ WBFig <- function(data, ylab, facetLab = ylab_label, figTheme = science_theme, S
               size = 3, parse = TRUE)
   return(p2)
 }
+
+#####################
+# squared r for LMM #
+#####################
+source("R/rsquaredglmm.R")
