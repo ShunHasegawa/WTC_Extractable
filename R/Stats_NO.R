@@ -33,14 +33,26 @@ scatterplotMatrix(~ log(no) + log(moist) + Temp5_Mean, data = Extr_DF, diag = "b
                   groups = Extr_DF$temp, by.group = TRUE)
 
 
-Iml_ancv_no <- lmer(log(no) ~ temp * log(moist) + (1|time) + (1|chamber), 
+m1 <- lmer(log(no) ~ temp * log(moist) + (1|time) + (1|chamber), 
                     data = Extr_DF)
+Anova(m1)
+visreg(m1, xvar = "moist", by = "temp", overlay = TRUE)
+# interaction is indicated, but moisture range is quite different. what if I use
+# the samge range of moisture for both treatment
+ddply(Extr_DF, .(temp), summarise, range(moist))
+m2 <- update(m1, subset = moist < 0.14)
+Anova(m2)
+visreg(m2, xvar = "moist", by = "temp", overlay = TRUE)
+# no indifcation of interaction; so remove interaction
+
+Iml_ancv_no <- lmer(log(no) ~ temp + log(moist) + (1|time) + (1|chamber),  data = Extr_DF)
 m2 <- update(Iml_ancv_no, ~. - (1|time))
 m3 <- update(Iml_ancv_no, ~. - (1|chamber))
 anova(Iml_ancv_no, m2, m3)
-
 Anova(Iml_ancv_no)
-Fml_ancv_no <- Iml_ancv_no
+
+Fml_ancv_no <- update(Iml_ancv_no, ~. - temp)
+anova(Iml_ancv_no, Fml_ancv_no)
 AnvF_ancv_no <- Anova(Fml_ancv_no, test.statistic = "F")
 AnvF_ancv_no
 
@@ -50,7 +62,7 @@ qqnorm(resid(Fml_ancv_no))
 qqline(resid(Fml_ancv_no))
 
 # visualise
-visreg(Fml_ancv_no, xvar = "moist", by = "temp", overlay = TRUE)
+visreg(Fml_ancv_no, xvar = "moist", overlay = TRUE, point = list(col = Extr_DF$temp))
 
 ## ----Stat_WTC_Extr_Nitrate_Smmry
 # The initial model is:
@@ -77,4 +89,4 @@ Anova(Fml_ancv_no)
 # F test
 AnvF_ancv_no
 
-visreg(Fml_ancv_no, xvar = "moist", by = "temp", overlay = TRUE)
+visreg(Fml_ancv_no, xvar = "moist", overlay = TRUE, point = list(col = Extr_DF$temp))
