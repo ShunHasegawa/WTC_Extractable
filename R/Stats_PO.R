@@ -36,27 +36,27 @@ WTC_ExtractableP_cntstDF <- cntrstTbl(cntrstRes = cntrst, data = extr, variable 
 ############################
 
 # plot soil variables 
-xyplot(po ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF)
-xyplot(po ~ moist|chamber, type = c("r", "p"), data = Extr_DF)
-xyplot(po ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF)
-xyplot(po ~ moist|time, type = c("r", "p"), data = Extr_DF)
+xyplot(po ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF2)
+xyplot(po ~ moist|chamber, type = c("r", "p"), data = Extr_DF2)
+xyplot(po ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF2)
+xyplot(po ~ moist|time, type = c("r", "p"), data = Extr_DF2)
 
-scatterplotMatrix(~ po + moist + Temp5_Mean, data = Extr_DF,
-                  diag = "boxplot", groups = Extr_DF$temp, by.group = TRUE)
+scatterplotMatrix(~ po + moist + Temp5_Mean, data = Extr_DF2,
+                  diag = "boxplot", groups = Extr_DF2$temp, by.group = TRUE)
 
-scatterplotMatrix(~ log(po) + log(moist) + Temp5_Mean, data = Extr_DF,
-                  diag = "boxplot", groups = Extr_DF$temp, by.group = TRUE)
+scatterplotMatrix(~ log(po) + log(moist) + Temp5_Mean, data = Extr_DF2,
+                  diag = "boxplot", groups = Extr_DF2$temp, by.group = TRUE)
 
-m1 <- lmer(po ~ temp * moist + (1|time) + (1|chamber), data = Extr_DF)
+m1 <- lmer(po ~ temp * moist + (1|time) + (1|chamber), data = Extr_DF2)
 Anova(m1)
 # Interaction is indicated, but moisture range is quite different. what if I use
 # the samge range of moisture for both treatment
-ddply(Extr_DF, .(temp), summarise, range(moist))
-m2 <- update(m1, subset = moist < 0.14)
+ddply(Extr_DF2, .(temp), summarise, range(moist))
+m2 <- update(m1, subset = moist < 0.132)
 Anova(m2)
 # no interaction so remove
 
-Iml_ancv_po <- lmer(po ~ temp + moist + (1|time) + (1|chamber), data = Extr_DF)
+Iml_ancv_po <- lmer(po ~ temp + moist + (1|time) + (1|chamber), data = Extr_DF2)
 Anova(Iml_ancv_po)
 
 Fml_ancv_po <- Iml_ancv_po

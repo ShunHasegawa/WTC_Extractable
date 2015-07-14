@@ -5,10 +5,14 @@ range(Extr_DF$no)
 bxplts(value = "no", data = Extr_DF)
 
 # power(1/3)
-Iml_no <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Extr_DF)
+m1 <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Extr_DF)
+Anova(m1)
+
+# no interaction. so remove time1 as it was before plants being installed
+Iml_no <- update(m1, data = Extr_DF2)
 Anova(Iml_no)
 
-Fml_no <- stepLmer(Iml_no)
+Fml_no <- update(Iml_no, ~. -temp:time)
 AnvF_no <- Anova(Fml_no, test.statistic = "F")
 AnvF_no
 
@@ -20,32 +24,30 @@ qqline(resid(Fml_no))
 ############################
 # ANCOVA fit soil variable #
 ############################
-
 # plot soil variables 
-xyplot(no ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF)
-xyplot(no ~ moist|chamber, type = c("r", "p"), data = Extr_DF)
-xyplot(no ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF)
-xyplot(no ~ moist|time, type = c("r", "p"), data = Extr_DF)
+xyplot(no ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF2)
+xyplot(no ~ moist|chamber, type = c("r", "p"), data = Extr_DF2)
+xyplot(no ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF2)
+xyplot(no ~ moist|time, type = c("r", "p"), data = Extr_DF2)
 
-scatterplotMatrix(~ I(no^(1/3)) + moist + Temp5_Mean, data = Extr_DF, diag = "boxplot", 
-                  groups = Extr_DF$temp, by.group = TRUE)
-scatterplotMatrix(~ log(no) + log(moist) + Temp5_Mean, data = Extr_DF, diag = "boxplot", 
-                  groups = Extr_DF$temp, by.group = TRUE)
-
+scatterplotMatrix(~ I(no^(1/3)) + moist + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
+                  groups = Extr_DF2$temp, by.group = TRUE)
+scatterplotMatrix(~ log(no) + log(moist) + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
+                  groups = Extr_DF2$temp, by.group = TRUE)
 
 m1 <- lmer(log(no) ~ temp * log(moist) + (1|time) + (1|chamber), 
-                    data = Extr_DF)
+                    data = Extr_DF2)
 Anova(m1)
 visreg(m1, xvar = "moist", by = "temp", overlay = TRUE)
 # interaction is indicated, but moisture range is quite different. what if I use
 # the samge range of moisture for both treatment
-ddply(Extr_DF, .(temp), summarise, range(moist))
-m2 <- update(m1, subset = moist < 0.14)
+ddply(Extr_DF2, .(temp), summarise, range(moist))
+m2 <- update(m1, subset = moist < 0.132)
 Anova(m2)
 visreg(m2, xvar = "moist", by = "temp", overlay = TRUE)
 # no indifcation of interaction; so remove interaction
 
-Iml_ancv_no <- lmer(log(no) ~ temp + log(moist) + (1|time) + (1|chamber),  data = Extr_DF)
+Iml_ancv_no <- lmer(log(no) ~ temp + log(moist) + (1|time) + (1|chamber),  data = Extr_DF2)
 m2 <- update(Iml_ancv_no, ~. - (1|time))
 m3 <- update(Iml_ancv_no, ~. - (1|chamber))
 anova(Iml_ancv_no, m2, m3)

@@ -206,22 +206,15 @@ MdlSmpl <- function(model){
 #############################################
 # compare different auto-correlation models #
 #############################################
-
-atcr.cmpr <- function(model, rndmFac){
-  if(rndmFac == "Chamber/Location"){
-    model2 <- update(model,corr=corCompSymm(form=~1|chamber/side)) 
-  } else {
-    if(rndmFac == "chamber"){
-      model2 <- update(model,corr=corCompSymm(form=~1|chamber))
-    } else {
-      model2 <- update(model,corr=corCompSymm(form=~1|id))
-    }
-  }
-  
-  model3 <- update(model,correlation=corARMA(q=2))
+#############################################
+# compare different auto-correlation models #
+#############################################
+atcr.cmpr <- function(model){
+  model2 <- update(model,corr=corCompSymm(form = model$call$random))
+  model3 <- update(model,correlation=corARMA(q = 2))
   model4 <- update(model,correlation=corAR1()) 
-  model5 <- update(model,correlation=corARMA(q=1))
-  a <- anova(model,model2,model3,model4,model5)
+  model5 <- update(model,correlation=corARMA(q = 1))
+  a <- anova(model, model2, model3, model4, model5)
   rownames(a) <- c("NULL", "corCompSymm", "corARMA(q=2)", "corAR1()", "corARMA(q=1)")
   models <- list(model, model2, model3, model4, model5, 'models' = a)
   return(models)
@@ -493,3 +486,8 @@ WBFig <- function(data, ylab, facetLab = ylab_label, figTheme = science_theme, S
 # squared r for LMM #
 #####################
 source("R/rsquaredglmm.R")
+
+###################
+# Drop and subset #
+###################
+subsetD <- function(...) droplevels(subset(...))
