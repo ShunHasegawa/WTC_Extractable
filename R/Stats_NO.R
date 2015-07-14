@@ -2,7 +2,7 @@
 
 range(Extr_DF$no)
 
-bxplts(value = "no", ofst = 0.1, data = Extr_DF)
+bxplts(value = "no", data = Extr_DF)
 
 # power(1/3)
 Iml_no <- lmer(no^(1/3) ~ temp * time + (1|chamber), data = Extr_DF)
