@@ -53,6 +53,7 @@ Extr_DF$moist <- Extr_DF$SoilVW_5_25_Mean
 
 # data frame without time 1 (pre-plant installation)
 Extr_DF2 <- subsetD(Extr_DF, time != 1)
+Extr_DF2$logmoist <- log(Extr_DF2$moist)
 
 ###########
 # Nitrate #

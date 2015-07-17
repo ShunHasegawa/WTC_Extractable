@@ -47,29 +47,36 @@ scatterplotMatrix(~ po + moist + Temp5_Mean, data = Extr_DF2,
 scatterplotMatrix(~ log(po) + log(moist) + Temp5_Mean, data = Extr_DF2,
                   diag = "boxplot", groups = Extr_DF2$temp, by.group = TRUE)
 
-m1 <- lmer(po ~ temp * moist + (1|time) + (1|chamber), data = Extr_DF2)
-Anova(m1)
-# Interaction is indicated, but moisture range is quite different. what if I use
-# the samge range of moisture for both treatment
-ddply(Extr_DF2, .(temp), summarise, range(moist))
-m2 <- update(m1, subset = moist < 0.132)
-Anova(m2)
-# no interaction so remove
-
-Iml_ancv_po <- lmer(po ~ temp + moist + (1|time) + (1|chamber), data = Extr_DF2)
+Iml_ancv_po <- lmer(po ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Extr_DF2)
 Anova(Iml_ancv_po)
 
-Fml_ancv_po <- Iml_ancv_po
-
-AnvF_ancv_po <- Anova(Iml_ancv_po, test.statistic = "F")
-AnvF_ancv_po
+Fml_ancv_po <- stepLmer(Iml_ancv_po, alpha.fixed = .1)
 
 plot(Fml_ancv_po)
 qqnorm(resid(Fml_ancv_po))
 qqline(resid(Fml_ancv_po))
 
+ol <- which(qqnorm(resid(Fml_ancv_po))$y == min(qqnorm(resid(Fml_ancv_po))$y))
+mm <- update(Iml_ancv_po, subset = -ol)
+plot(mm)
+qqnorm(resid(mm))
+qqline(resid(mm))
+
+Iml_ancv_po <- mm
+Fml_ancv_po <- stepLmer(Iml_ancv_po, alpha.fixed = .1)
+AnvF_ancv_po <- Anova(Fml_ancv_po, test.statistic = "F")
+AnvF_ancv_po
+summary(Fml_ancv_po)
+plot(allEffects(Fml_ancv_po))
+
 # visualise
-visreg(Fml_ancv_po, xvar = "moist", by = "temp", overlay = TRUE)
+# visreg can't be used for the above model as one value is removed
+Extr_DF2$newpo <- Extr_DF2$po
+Extr_DF2$newpo[ol] <- NA
+ml_po <- lmer(newpo ~ moist + Temp5_Mean + (1|chamber), data = Extr_DF2)
+par(mfrow = c(1, 2))
+visreg(ml_po, xvar = "moist", point = list(col = Extr_DF2$temp))
+visreg(ml_po, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))
 
 ## ----Stat_WTC_Extr_Phosphate_Smmry
 # The initial model is:
@@ -89,3 +96,7 @@ Anova(Iml_ancv_po)
 
 Fml_ancv_po@call
 AnvF_ancv_po
+
+par(mfrow = c(1, 2))
+visreg(ml_po, xvar = "moist", point = list(col = Extr_DF2$temp))
+visreg(ml_po, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))

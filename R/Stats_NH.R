@@ -41,31 +41,16 @@ xyplot(nh ~ moist|chamber, type = c("r", "p"), data = Extr_DF2)
 xyplot(nh ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF2)
 xyplot(nh ~ moist|time, type = c("r", "p"), data = Extr_DF2)
 
-scatterplotMatrix(~ I(nh^(1/3)) + moist + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
-                  groups = Extr_DF2$temp, by.group = TRUE)
-scatterplotMatrix(~ log(nh) + log(moist) + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
+scatterplotMatrix(~ I(nh^(1/3)) + log(moist) + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
                   groups = Extr_DF2$temp, by.group = TRUE)
 
+m1 <- lmer(nh^(1/3) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Extr_DF2)
+m2 <- stepLmer(m1, alpha.fixed = .1)
+Anova(m2, test.statistic = "F")
 
-m1 <- lmer(nh^(1/3) ~ temp * log(moist) + (1|time) + (1|chamber), 
-                    data = Extr_DF2)
-Anova(m1) 
-# Interaction is indicated, but moisture range is quite different. what if I use
-# the samge range of moisture for both treatment
-ddply(Extr_DF2, .(temp), summarise, range(moist))
-m2 <- update(m1, subset = moist < 0.132)
-Anova(m2)
-# no interaction so remove this.
+Iml_ancv_nh <- lmer(nh^(1/3) ~ temp * (log(moist) + Temp5_Mean) + (1|chamber), data = Extr_DF2)
+Fml_ancv_nh <- lmer(nh^(1/3) ~ temp + Temp5_Mean + (1|chamber), data = Extr_DF2)
 
-Iml_ancv_nh <- lmer(nh^(1/3) ~ temp + log(moist) + (1|time) + (1|chamber), 
-                    data = Extr_DF2)
-m2 <- update(Iml_ancv_nh, ~. - (1|time))
-m3 <- update(Iml_ancv_nh, ~. - (1|chamber))
-anova(Iml_ancv_nh, m2, m3)
-
-Anova(Iml_ancv_nh)
-
-Fml_ancv_nh <- Iml_ancv_nh
 AnvF_ancv_nh <- Anova(Fml_ancv_nh, test.statistic = "F")
 AnvF_ancv_nh
 plot(Fml_ancv_nh)
@@ -73,7 +58,8 @@ qqnorm(resid(Fml_ancv_nh))
 qqline(resid(Fml_ancv_nh))
 
 # visualise
-visreg(Fml_ancv_nh, xvar = "moist", by = "temp", overlay = TRUE)
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE, 
+       trans = function(x) x^3)
 
 ## ----Stat_WTC_Extr_Ammonium_Smmry
 # The initial model is:
@@ -100,3 +86,5 @@ Anova(Fml_ancv_nh)
 
 # F test
 AnvF_ancv_nh
+
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
