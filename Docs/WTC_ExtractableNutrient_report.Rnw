@@ -35,7 +35,7 @@ load("Output/Data/AllObj.RData")
 %%%%%%%%%%%%%%%
 \section{Summary results}
 \begin{figure}[!ht]\label{figure:WTC_Extractable_Allres}
-\includegraphics[width=\textwidth]{../Output/Figs/Manuscriopt/WTC_Extractable.pdf}
+\includegraphics[width=\textwidth]{../Output/Figs/Manuscript/WTC_Extractable.pdf}
 \caption{Soil-extractable nutrients}
 \end{figure}
 

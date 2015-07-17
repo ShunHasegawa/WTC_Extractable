@@ -49,7 +49,7 @@ read_chunk("R/Stats_NO.R")
 %% Summary %%
 %%%%%%%%%%%%%
 
-<<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup', fig.show='asis', fig.width = 4, fig.height = 4>>=
+<<Stat_WTC_Extr_Nitrate_Smmry, echo=TRUE, results='markup', fig.show='asis', fig.width = 6.5, fig.height = 4>>=
 @
 
 % %%%%%%%%%%%%
