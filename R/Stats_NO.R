@@ -57,10 +57,11 @@ qqline(resid(Fml_ancv_no))
 # visualise
 par(mfrow = c(1, 2))
 TransVirsreg(visreg(Fml_ancv_no, xvar = "moist", plot = FALSE), 
-             ddf = Extr_DF2, trans = function(x) x^3)
-
+             point = list(col = Extr_DF2$temp, cex = 1), 
+             trans = function(x) x^3)
 TransVirsreg(visreg(Fml_ancv_no, xvar = "Temp5_Mean", plot = FALSE), 
-             ddf = Extr_DF2, trans = function(x) x^3)
+             point = list(col = Extr_DF2$temp, cex = 1),
+             trans = function(x) x^3)
 
 # Note: poinst plotted on visreg is not raw data but corrected value. when 
 # plotted against Temp, median of moisture is used to get predicted values. Raw 
@@ -106,7 +107,8 @@ AnvF_ancv_no
 
 par(mfrow = c(1, 2))
 TransVirsreg(visreg(Fml_ancv_no, xvar = "moist", plot = FALSE), 
+             point = list(col = Extr_DF2$temp, cex = 1), 
              trans = function(x) x^3)
-
 TransVirsreg(visreg(Fml_ancv_no, xvar = "Temp5_Mean", plot = FALSE), 
+             point = list(col = Extr_DF2$temp, cex = 1),
              trans = function(x) x^3)

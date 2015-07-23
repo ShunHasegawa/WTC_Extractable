@@ -526,5 +526,5 @@ TransVirsreg <- function(VisObj, trans, ...){
   dd <- VisObj
   dd$fit$visregFit <- trans(dd$fit$visregFit)
   dd$res$visregRes <- trans(dd$res$visregRes)
-  plot(dd, point = list(col = c(1, 2), cex = 1), ...)
+  plot(dd, ...)
 }
