@@ -528,3 +528,5 @@ TransVirsreg <- function(VisObj, trans, ...){
   dd$res$visregRes <- trans(dd$res$visregRes)
   plot(dd, ...)
 }
+# when a model has "temp" then use col = c(1, 2) as visreg object differentiate
+# temp trt but if not use col = df$temp
