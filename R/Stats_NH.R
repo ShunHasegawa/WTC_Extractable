@@ -56,7 +56,7 @@ qqline(resid(Fml_ancv_nh))
 
 # visualise
 TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp"), 
-             ddf = Extr_DF2, trans = function(x) x^3, overlay = TRUE, 
+             trans = function(x) x^3, overlay = TRUE, 
              line = list(col = c(1, 2)))
 
 ## ----Stat_WTC_Extr_Ammonium_Smmry

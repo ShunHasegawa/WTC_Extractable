@@ -522,9 +522,9 @@ AncvSmmryTbl <- function(AncvRes, predictor){
 # Transformed visreg #
 ######################
 # For some reasons, visreg doesn't work with trans argument
-TransVirsreg <- function(VisObj, ddf, trans, ...){
+TransVirsreg <- function(VisObj, trans, ...){
   dd <- VisObj
   dd$fit$visregFit <- trans(dd$fit$visregFit)
   dd$res$visregRes <- trans(dd$res$visregRes)
-  plot(dd, point = list(col = ddf$temp, cex = 1), ...)
+  plot(dd, point = list(col = c(1, 2), cex = 1), ...)
 }

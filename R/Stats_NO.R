@@ -106,7 +106,7 @@ AnvF_ancv_no
 
 par(mfrow = c(1, 2))
 TransVirsreg(visreg(Fml_ancv_no, xvar = "moist", plot = FALSE), 
-             ddf = Extr_DF2, trans = function(x) x^3)
+             trans = function(x) x^3)
 
 TransVirsreg(visreg(Fml_ancv_no, xvar = "Temp5_Mean", plot = FALSE), 
-             ddf = Extr_DF2, trans = function(x) x^3)
+             trans = function(x) x^3)
