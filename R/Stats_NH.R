@@ -48,8 +48,8 @@ m1 <- lmer(nh^(1/3) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Extr_DF2
 m2 <- stepLmer(m1, alpha.fixed = .1)
 Anova(m2, test.statistic = "F")
 
-Iml_ancv_nh <- lmer(nh^(1/3) ~ temp * (log(moist) + Temp5_Mean) + (1|chamber), data = Extr_DF2)
-Fml_ancv_nh <- lmer(nh^(1/3) ~ temp + Temp5_Mean + (1|chamber), data = Extr_DF2)
+Iml_ancv_nh <- lmer(nh^(1/3) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Extr_DF2)
+Fml_ancv_nh <- lmer(nh^(1/3) ~ moist + Temp5_Mean + (1|chamber), data = Extr_DF2)
 
 AnvF_ancv_nh <- Anova(Fml_ancv_nh, test.statistic = "F")
 AnvF_ancv_nh
@@ -58,8 +58,9 @@ qqnorm(resid(Fml_ancv_nh))
 qqline(resid(Fml_ancv_nh))
 
 # visualise
-visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE, 
-       trans = function(x) x^3)
+par(mfrow = c(1, 2))
+visreg(Fml_ancv_nh, xvar = "moist", point = list(col = Extr_DF$temp))
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", point = list(col = Extr_DF$temp))
 
 ## ----Stat_WTC_Extr_Ammonium_Smmry
 # The initial model is:
@@ -87,4 +88,6 @@ Anova(Fml_ancv_nh)
 # F test
 AnvF_ancv_nh
 
-visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", overlay = TRUE)
+par(mfrow = c(1, 2))
+visreg(Fml_ancv_nh, xvar = "moist", point = list(col = Extr_DF$temp))
+visreg(Fml_ancv_nh, xvar = "Temp5_Mean", point = list(col = Extr_DF$temp))

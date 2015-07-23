@@ -34,7 +34,7 @@ Extr_ChMean <- ddply(extr, .(time, date, chamber, temp),
 # compute means of soil variabes for each incubation period (28 days), and merge
 # with nutrient df
 Extr_DF <- ddply(Extr_ChMean, .(time, date, chamber, temp, no, nh, po, NP, gmNP),
-                 function(x) SoilIncSampMean(insertion= x$date - 28, sampling= x$date,
+                 function(x) SoilIncSampMean(insertion= x$date - 90, sampling= x$date,
                                              Chm = x$chamber))
 
 # visudally check if the function works
@@ -45,7 +45,7 @@ p2 <- p +
              col = "red", size = 2)+
   facet_wrap( ~ chamber)+
   geom_vline(xintercept = as.numeric(unique(Extr_DF$date)), linetype = "dashed") +
-  geom_vline(xintercept = as.numeric(unique(Extr_DF$date)) - 28, linetype = "dashed")
+  geom_vline(xintercept = as.numeric(unique(Extr_DF$date)) - 45, linetype = "dashed")
 p2  
 # good but 1st measurement of chamber01 don't have enought data points
 
@@ -92,3 +92,12 @@ save(Stat_TempTime, file = "Output//Data/TempTime_Stat.RData")
 ########################
 ContrastDF <- WTC_ExtractableP_cntstDF
 save(ContrastDF, file = "Output//Data/WTCE_Extractable_ContrastDF.RData")
+
+############
+## ANCOVA ##
+############
+AncvLst <- list('no' = AnvF_ancv_no, 
+                'nh' = AnvF_ancv_nh, 
+                'po' = AnvF_ancv_po)
+AncvRes <- AncvSmmryTbl(AncvRes = AncvLst, predictor = row.names(Anova(Iml_ancv_nh)))
+write.csv(AncvRes,  file = "Output/Table/SummaryANCOVA.csv", row.names = FALSE)
