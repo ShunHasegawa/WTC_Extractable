@@ -36,18 +36,15 @@ Anova(m2, test.statistic = "F")
 ############################
 
 # plot soil variables 
-xyplot(nh ~ moist|temp, groups = chamber, type = c("r", "p"), data = Extr_DF2)
-xyplot(nh ~ moist|chamber, type = c("r", "p"), data = Extr_DF2)
-xyplot(nh ~ moist|temp, groups = time, type = c("r", "p"), data = Extr_DF2)
-xyplot(nh ~ moist|time, type = c("r", "p"), data = Extr_DF2)
+xyplot(nh ~ moist|chamber, group = temp, type = c("r", "p"), data = Extr_DF2)
+xyplot(nh ~ Temp5_Mean|chamber, group = temp, type = c("r", "p"), data = Extr_DF2)
 
 scatterplotMatrix(~ I(nh^(1/3)) + log(moist) + Temp5_Mean, data = Extr_DF2, diag = "boxplot", 
                   groups = Extr_DF2$temp, by.group = TRUE)
 
 Iml_ancv_nh <- lmer(nh^(1/3) ~ temp * (moist + Temp5_Mean) + (1|chamber), data = Extr_DF2)
-Fml_ancv_nh <- stepLmer(m1, alpha.fixed = .1)
-Anova(Fml_ancv_nh, test.statistic = "F")
-
+Anova(Iml_ancv_nh)
+Fml_ancv_nh <- stepLmer(Iml_ancv_nh, alpha.fixed = .1)
 AnvF_ancv_nh <- Anova(Fml_ancv_nh, test.statistic = "F")
 AnvF_ancv_nh
 plot(Fml_ancv_nh)
@@ -55,10 +52,13 @@ qqnorm(resid(Fml_ancv_nh))
 qqline(resid(Fml_ancv_nh))
 
 # visualise
-TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
+par(mfrow = c(1, 2))
+TransVirsreg(visreg(Fml_ancv_nh, xvar = "moist", plot = FALSE), 
              trans = function(x) x^3, overlay = TRUE, 
-             point = list(col = c(1, 2), cex = 1),
-             line = list(col = c(1, 2)))
+             point = list(col = Extr_DF2$temp, cex = 1))
+TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = function(x) x^3, overlay = TRUE, 
+             point = list(col = Extr_DF2$temp, cex = 1))
 
 ## ----Stat_WTC_Extr_Ammonium_Smmry
 # The initial model is:
@@ -86,8 +86,10 @@ Anova(Fml_ancv_nh)
 # F test
 AnvF_ancv_nh
 
-par(mfrow = c(1, 1))
-TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", by = "temp", plot = FALSE), 
+par(mfrow = c(1, 2))
+TransVirsreg(visreg(Fml_ancv_nh, xvar = "moist", plot = FALSE), 
              trans = function(x) x^3, overlay = TRUE, 
-             point = list(col = c(1, 2), cex = 1),
-             line = list(col = c(1, 2)))
+             point = list(col = Extr_DF2$temp, cex = 1))
+TransVirsreg(visreg(Fml_ancv_nh, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = function(x) x^3, overlay = TRUE, 
+             point = list(col = Extr_DF2$temp, cex = 1))

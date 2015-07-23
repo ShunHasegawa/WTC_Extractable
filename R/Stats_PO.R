@@ -66,8 +66,6 @@ Iml_ancv_po <- mm
 Fml_ancv_po <- stepLmer(Iml_ancv_po, alpha.fixed = .1)
 AnvF_ancv_po <- Anova(Fml_ancv_po, test.statistic = "F")
 AnvF_ancv_po
-summary(Fml_ancv_po)
-plot(allEffects(Fml_ancv_po))
 
 # visualise
 # visreg can't be used for the above model as one value is removed
@@ -75,8 +73,10 @@ Extr_DF2$newpo <- Extr_DF2$po
 Extr_DF2$newpo[ol] <- NA
 ml_po <- lmer(newpo ~ moist + Temp5_Mean + (1|chamber), data = Extr_DF2)
 par(mfrow = c(1, 2))
-visreg(ml_po, xvar = "moist", point = list(col = Extr_DF2$temp))
-visreg(ml_po, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))
+TransVirsreg(visreg(ml_po, xvar = "moist", plot = FALSE), 
+             trans = I, point = list(col = Extr_DF2$temp, cex = 1))
+TransVirsreg(visreg(ml_po, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = I, point = list(col = Extr_DF2$temp, cex = 1))
 
 ## ----Stat_WTC_Extr_Phosphate_Smmry
 # The initial model is:
@@ -98,5 +98,7 @@ Fml_ancv_po@call
 AnvF_ancv_po
 
 par(mfrow = c(1, 2))
-visreg(ml_po, xvar = "moist", point = list(col = Extr_DF2$temp))
-visreg(ml_po, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))
+TransVirsreg(visreg(ml_po, xvar = "moist", plot = FALSE), 
+             trans = I, point = list(col = Extr_DF2$temp, cex = 1))
+TransVirsreg(visreg(ml_po, xvar = "Temp5_Mean", plot = FALSE), 
+             trans = I, point = list(col = Extr_DF2$temp, cex = 1))

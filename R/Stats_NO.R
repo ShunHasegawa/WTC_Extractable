@@ -70,7 +70,7 @@ TransVirsreg(visreg(Fml_ancv_no, xvar = "Temp5_Mean", plot = FALSE),
 par(mfrow = c(1, 3))
 
 # adjusted values by visreg
-visreg(Fml_ancv_no, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))
+a <- visreg(Fml_ancv_no, xvar = "Temp5_Mean", point = list(col = Extr_DF2$temp))
 
 # raw data
 plot(no^(1/3) ~ Temp5_Mean, col = temp, data = Extr_DF2, pch = 19)
