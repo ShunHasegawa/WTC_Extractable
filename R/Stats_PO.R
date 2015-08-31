@@ -70,7 +70,7 @@ AnvF_ancv_po
 # visualise
 # visreg can't be used for the above model as one value is removed
 newpodf <- Extr_DF2[-ol, ]
-ml_po <- lmer(newpo ~ moist + Temp5_Mean + (1|chamber), data = newpodf)
+ml_po <- lmer(po ~ moist + Temp5_Mean + (1|chamber), data = newpodf)
 par(mfrow = c(1, 2))
 TransVirsreg(visreg(ml_po, xvar = "moist", plot = FALSE), 
              trans = I, point = list(col = newpodf$temp, cex = 1))

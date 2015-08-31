@@ -66,7 +66,7 @@ p <- WBFig(data = TrtMean,
   theme(legend.position = c(.8, .94),
         legend.background = element_rect(fill = "transparent",colour = NA))
 p
-ggsavePP(filename = "Output//Figs/Manuscriopt/WTC_Extractable", plot = p, 
+ggsavePP(filename = "Output//Figs/Manuscript/WTC_Extractable", plot = p, 
          width = 6.65, height = 6.65)
 
 ##################################
